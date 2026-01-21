@@ -1,0 +1,45 @@
+# Build artifacts
+firmware/.pio/
+firmware/build/
+*.o
+*.a
+*.elf
+*.bin
+*.hex
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+.env
+venv/
+.venv/
+
+# AI/LLM scratch space
+_scratch/
+_draft_*
+*.tmp
+.cascade/
+.cursor/
+
+# Temporary files
+*.bak
+*.log
+
+# Node (if using web tools)
+node_modules/
+package-lock.json
+
+# 3D printing
+models/gcode/
+*.gcode
+]]>
