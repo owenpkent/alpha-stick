@@ -593,6 +593,41 @@ build_flags =
 
 ---
 
+## Reference: Joypad OS Architecture
+
+Alpha Stick firmware shares architectural principles with **[Joypad OS](https://github.com/joypad-ai/joypad-os)**, a universal controller firmware platform. While Alpha Stick focuses on adaptive input for a single device, Joypad OS provides a modular foundation for multi-protocol translation.
+
+### Key Similarities
+
+| Aspect | Alpha Stick | Joypad OS |
+|--------|------------|-----------|
+| **Input Processing** | Joystick + buttons → processing pipeline | Multiple input types → protocol translation |
+| **Modular Design** | Separate input/processing/output modules | Pluggable firmware apps (usb2usb, usb2gc, etc.) |
+| **Configuration** | Web UI + NVS storage | Profile system with persistent storage |
+| **Real-time I/O** | ~1000Hz update loop | Real-time controller I/O focus |
+| **Accessibility** | Tremor filtering, adjustable sensitivity | Foundation for assistive play |
+| **Wireless Support** | Bluetooth LE HID | Bluetooth + USB support |
+
+### Architectural Inspiration
+
+Joypad OS demonstrates effective patterns for:
+- **Modular input/output separation** — Alpha Stick uses similar layered architecture (inputs → processing → outputs)
+- **Flexible routing** — Future Alpha Stick versions could support multiple output modes (USB, Bluetooth, 3.5mm passthrough)
+- **Hardware-agnostic design** — Both projects aim for portability across microcontroller platforms
+- **Configuration persistence** — Both use non-volatile storage for user profiles
+
+### Potential Future Integration
+
+As Alpha Stick evolves, Joypad OS patterns could inform:
+- **Multi-output support** — Route Alpha Stick input to multiple destinations simultaneously
+- **Protocol translation** — Convert Alpha Stick input to console-specific protocols (GameCube, Dreamcast, etc.)
+- **Advanced filtering** — Adopt Joypad OS's real-time signal processing techniques
+- **Community firmware apps** — Create modular extensions for specific use cases
+
+For more details on Joypad OS, see the [official repository](https://github.com/joypad-ai/joypad-os) and its [build documentation](https://github.com/joypad-ai/joypad-os/blob/main/docs/BUILD.md).
+
+---
+
 ## Future Enhancements
 
 - [ ] XInput mode for native Xbox support
@@ -602,6 +637,8 @@ build_flags =
 - [ ] Multiple joystick support (dual-stick)
 - [ ] Gyro/accelerometer input
 - [ ] Voice command integration
+- [ ] Multi-output routing (inspired by Joypad OS)
+- [ ] Console-specific protocol translation
 
 See [TODO.md](../TODO.md) for roadmap.
 ]]>

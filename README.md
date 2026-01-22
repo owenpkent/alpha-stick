@@ -271,6 +271,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 ## Related Projects
 
 - **[Project Nimbus](https://github.com/owenpkent/Project-Nimbus)** — Virtual controller interface for accessibility
+- **[Joypad OS](https://github.com/joypad-ai/joypad-os)** — Universal controller firmware for adapters and protocol translation (reference architecture)
 - **[Xbox Adaptive Controller](https://www.xbox.com/en-US/accessories/controllers/xbox-adaptive-controller)** — Microsoft's adaptive gaming hub
 - **[QuadStick](https://www.quadstick.com/)** — Commercial mouth-operated controller
 - **[Feather Joystick](https://www.celticmagic.org/feather)** — Ultra-light force joystick
