@@ -72,6 +72,15 @@ Alpha Stick uses an **ESP32-S3** microcontroller with:
 | 1 | Power Switch | SS12D00 | On/off toggle | $0.50 |
 | 2 | RGB LED | WS2812B | Status indicators | $1 |
 
+### Isometric Joystick Components (Alternative to Standard Joystick)
+
+| Qty | Component | Part Number | Description | Est. Cost |
+|-----|-----------|-------------|-------------|-----------|
+| 4 | Micro Load Cell | 50g or 100g | Force sensing, Wheatstone bridge | $8 |
+| 2 | 24-bit ADC | NAU7802 or HX711 | High-resolution force measurement | $4-14 |
+| 1 | I2C Multiplexer | PCA9548 | Required if using 2x NAU7802 | $2-6 |
+| | | | **Total Isometric Add-on** | **~$14-28** |
+
 ---
 
 ## Microcontroller Selection
@@ -122,6 +131,153 @@ Inspired by Feather joystick:
 - **Magnet + Hall sensor array** — Detect position without mechanical resistance
 - **Adjustable springs** — Add force feedback as needed
 - **Target:** <10 gram actuation force
+
+### Isometric Force-Sensing (No Movement)
+
+An **isometric joystick** detects force direction without any physical movement — the stick is stationary and rigid. This is ideal for users who cannot exert enough force to overcome spring resistance or who have limited range of motion.
+
+#### How It Works
+
+Four micro load cells are arranged in a cross pattern around a rigid center post. When the user pushes in any direction, the load cells detect the force differential and calculate X/Y axis values.
+
+```
+                    [Load Cell Y+]
+                         │
+                         ▼
+         [Load Cell X-] ─●─ [Load Cell X+]    ● = Rigid center post
+                         │                        (does not move)
+                         ▼
+                    [Load Cell Y-]
+
+Force calculation:
+  X = (X+ reading) - (X- reading)
+  Y = (Y+ reading) - (Y- reading)
+```
+
+#### Components Required
+
+| Qty | Component | Description | Est. Cost |
+|-----|-----------|-------------|-----------|
+| 4 | Micro Load Cell | 50g or 100g range, Wheatstone bridge | $8 |
+| 2 | NAU7802 24-bit ADC | High-precision I2C ADC (or HX711) | $14 |
+| 1 | Rigid mounting structure | 3D printed or machined | $2 |
+| | | **Total** | **~$24** |
+
+#### Sensor Options
+
+**Option 1: NAU7802 (Recommended)**
+- **Resolution:** 24-bit (16 million steps)
+- **Sensitivity:** Sub-gram detection with 50g load cell (~0.003g theoretical)
+- **Interface:** I2C (address 0x2A, needs multiplexer for 2 units)
+- **Sample rate:** Up to 320 SPS
+- **Source:** Adafruit #4538 (~$7 each)
+
+**Option 2: HX711 (Budget)**
+- **Resolution:** 24-bit
+- **Sensitivity:** Good, but noisier than NAU7802
+- **Interface:** Custom 2-wire protocol (CLK + DATA)
+- **Sample rate:** 10 or 80 SPS
+- **Source:** Amazon/AliExpress (~$2 each)
+
+#### Load Cell Selection
+
+For <5g sensitivity, use **50g or 100g rated micro load cells**:
+
+| Rating | Sensitivity | Best For |
+|--------|-------------|----------|
+| 50g | ~0.003g with 24-bit ADC | Ultra-light touch, minimal force |
+| 100g | ~0.006g with 24-bit ADC | Light touch with more headroom |
+| 500g | ~0.03g with 24-bit ADC | Standard use, more robust |
+
+**Recommended:** 50g for accessibility focus, 100g for general use.
+
+#### Wiring Diagram (NAU7802)
+
+```
+Load Cells (X-axis pair)          NAU7802 #1
+┌─────────────────────┐          ┌──────────┐
+│  X+ Load Cell       │          │          │
+│    E+ (red) ────────┼─────────▶│ E+       │
+│    E- (black) ──────┼─────────▶│ E-       │
+│    A+ (white) ──────┼─────────▶│ A+       │
+│    A- (green) ──────┼─────────▶│ A-       │
+└─────────────────────┘          │          │
+┌─────────────────────┐          │          │      ┌──────────┐
+│  X- Load Cell       │          │  SDA ────┼─────▶│ GPIO8    │
+│    (wired in series │          │  SCL ────┼─────▶│ GPIO9    │
+│     or separate)    │          │  VCC ────┼─────▶│ 3.3V     │
+└─────────────────────┘          │  GND ────┼─────▶│ GND      │
+                                 └──────────┘      └──────────┘
+                                                     ESP32-S3
+
+Load Cells (Y-axis pair)          NAU7802 #2
+┌─────────────────────┐          ┌──────────┐
+│  Y+ and Y- Load     │          │          │
+│  Cells (same as     │─────────▶│ (same    │
+│  above)             │          │  wiring) │
+└─────────────────────┘          └──────────┘
+                                      │
+                                      ▼
+                              I2C Multiplexer (PCA9548)
+                              (required - same I2C address)
+```
+
+#### Alternative: HX711 Wiring
+
+```
+Load Cell (one axis)              HX711 Module
+┌─────────────────────┐          ┌──────────┐
+│  E+ (red) ──────────┼─────────▶│ E+       │
+│  E- (black) ────────┼─────────▶│ E-       │
+│  A+ (white) ────────┼─────────▶│ A+       │
+│  A- (green) ────────┼─────────▶│ A-       │
+└─────────────────────┘          │          │      ┌──────────┐
+                                 │  DT ─────┼─────▶│ GPIO4    │
+                                 │  SCK ────┼─────▶│ GPIO5    │
+                                 │  VCC ────┼─────▶│ 3.3V     │
+                                 │  GND ────┼─────▶│ GND      │
+                                 └──────────┘      └──────────┘
+
+Repeat for Y-axis with HX711 #2 on GPIO6/GPIO7
+```
+
+#### Pin Assignments (Isometric Mode)
+
+| Function | GPIO | Type | Notes |
+|----------|------|------|-------|
+| NAU7802 SDA | GPIO8 | I2C | Shared with OLED |
+| NAU7802 SCL | GPIO9 | I2C | Shared with OLED |
+| I2C Mux Reset | GPIO10 | Digital | Optional |
+| — OR — | | | |
+| HX711 #1 DT | GPIO4 | Digital | X-axis data |
+| HX711 #1 SCK | GPIO5 | Digital | X-axis clock |
+| HX711 #2 DT | GPIO6 | Digital | Y-axis data |
+| HX711 #2 SCK | GPIO7 | Digital | Y-axis clock |
+
+#### Firmware Considerations
+
+- **Calibration:** Tare on startup, store calibration factor in NVS
+- **Filtering:** Apply low-pass filter for tremor reduction
+- **Deadzone:** Configurable center deadzone (important for accessibility)
+- **Sensitivity curve:** Adjustable response curve (linear, exponential, S-curve)
+- **Sample rate:** 80-320 Hz for responsive gaming
+
+#### Mechanical Design Notes
+
+- Center post must be **rigid** — no flex or movement
+- Load cells should be **preloaded** slightly for bidirectional sensing
+- Consider **silicone damping** between post and load cells
+- **Knob height** affects leverage — taller = more sensitive
+
+#### Sourcing
+
+| Part | AliExpress | Amazon |
+|------|------------|--------|
+| 50g Micro Load Cell | "50g load cell" ~$1-2 ea | ~$3-4 ea |
+| 100g Micro Load Cell | "100g micro load cell" ~$1-2 ea | ~$3-4 ea |
+| HX711 Module | "HX711 module" ~$1-2 ea | SparkFun SEN-13879 ~$10 |
+| NAU7802 | — | Adafruit #4538 ~$7 |
+| PCA9548 I2C Mux | "PCA9548 module" ~$2 | Adafruit #5626 ~$6 |
 
 ---
 
