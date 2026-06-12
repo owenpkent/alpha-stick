@@ -16,12 +16,16 @@ V2 splits printing into three groups:
 
 ```
 models/
++-- source/
+|   +-- pod-v0.scad                   # parametric source for all pod v0 parts
 +-- stl/
 |   +-- pod/
-|   |   +-- pod-housing-v2.stl        # PTFE cup bore, PCB bosses, M12x0.75 internal thread
-|   |   +-- adjuster-carrier-v2.stl   # ring magnet recess, M12x0.75 external thread, detents
-|   |   +-- stick-hub-v2.stl          # magnet + washer recesses, tube bore, ball cup
-|   +-- bodies/
+|   |   +-- seat-housing-v0.stl       # PTFE-tape socket, anti-yaw slots, posts
+|   |   +-- bench-base-v0.stl         # Qwiic breakout pocket, M12x0.75 boss
+|   |   +-- adjuster-carrier-v0.stl   # ring magnet pocket, M12x0.75 thread
+|   |   +-- stick-hub-v0.stl          # dome pivot, magnet pocket, tube bore
+|   |   +-- thread-guide-v0.stl       # force-rig string guide
+|   +-- bodies/                       # (production era, after Phase 0)
 |   |   +-- base-desktop-v2.stl       # main PCB + pod bay + jack/USB cutouts
 |   |   +-- top-plate-v2.stl
 |   |   +-- thumb-puck-v2.stl         # 30 mm pod-only puck
@@ -120,11 +124,11 @@ Pod housing: cup bore UP          Carrier: thread UP, magnet recess down
    +---------+                        |     |
    bed                                bed
 
-Stick hub: tube bore UP           Base: flat, bottom down
-   +--+                           Top plate: top face DOWN (smooth)
-   |  |  <- bore                  Toppers: stem down, no supports
-   +--+
-   bed
+Stick hub: neck DOWN (dome up,    Base: flat, bottom down
+   smooth pivot surface on top)   Top plate: top face DOWN (smooth)
+                                  Toppers: stem down, no supports
+Pod v0 STLs export pre-flipped to their print orientation
+(see models/README.md), so slice them as they load.
 ```
 
 Orientation matters most on the hub and housing: the magnet recesses and cup bore should be

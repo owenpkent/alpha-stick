@@ -17,6 +17,7 @@ First-principles redesign baseline: see [docs/DESIGN_V2.md](docs/DESIGN_V2.md). 
 - [ ] **Verify Z-press detection** (gap change) with clean hysteresis at <5 gf
 
 ### Mechanics Bench
+- [x] **Model pod v0 printables** — parametric OpenSCAD source + STLs ([models/](models/))
 - [ ] **Prototype magnetic centering + threaded force adjuster**, confirm 1-8 gf range with gram gauge
 - [ ] **Measure ball-in-PTFE pivot breakout force** (<0.5 gf target) and return-to-center repeatability
 - [ ] **Print sensor pod v0** (pivot + magnet + pod PCB outline + adjuster carrier)
