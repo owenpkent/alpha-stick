@@ -8,6 +8,9 @@ Task tracking for the Alpha Stick project.
 
 First-principles redesign baseline: see [docs/DESIGN_V2.md](docs/DESIGN_V2.md). Bench-validate the core physics before any enclosure or PCB work.
 
+### Order
+- [ ] **Order Phase 0 bench parts** per [docs/PHASE0_PARTS.md](docs/PHASE0_PARTS.md)
+
 ### Sensing Bench
 - [ ] **Breadboard dual TMAG5273 + tilting magnet** and measure field swing, noise, effective bits at 1 kHz
 - [ ] **Decide TMAG5273 vs MLX90393** from bench data (need >=8 effective bits/axis)
@@ -47,7 +50,7 @@ First-principles redesign baseline: see [docs/DESIGN_V2.md](docs/DESIGN_V2.md). 
 - [ ] **Prototype in CAD** — FreeCAD or Fusion360
 
 ### Firmware
-- [ ] **Set up ESP-IDF project** — ESP32-S3 target
+- [x] **Set up ESP-IDF project** — ESP32-S3 target (`firmware/` scaffold with simulation mode)
 - [ ] **Implement USB HID gamepad** — Basic joystick + buttons
 - [ ] **Read analog joystick input** — ADC sampling with smoothing
 - [ ] **Add basic deadzone** — Configurable center deadzone

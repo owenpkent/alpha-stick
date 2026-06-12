@@ -1,0 +1,33 @@
+menu "Alpha Stick"
+
+    choice AS_BUILD_PROFILE
+        prompt "Build profile"
+        default AS_BUILD_PROFILE_GAMING
+        help
+            DRIVE is the ATOS input build: mandatory dual-sensor cross-check,
+            no auto-tare, radios off in wired mode. See docs/DESIGN_V2.md sec 9.
+
+        config AS_BUILD_PROFILE_GAMING
+            bool "Gaming"
+        config AS_BUILD_PROFILE_DRIVE
+            bool "Drive (ATOS input)"
+    endchoice
+
+    choice AS_ROLE
+        prompt "Device role"
+        default AS_ROLE_STICK
+
+        config AS_ROLE_STICK
+            bool "Stick"
+        config AS_ROLE_DONGLE
+            bool "Dongle (AS-Link to USB bridge)"
+    endchoice
+
+    config AS_SIMULATE_WHEN_NO_SENSOR
+        bool "Simulate stick input when no sensor is found"
+        default y
+        help
+            With no TMAG5273 on the bus, synthesize a slow circle plus a
+            periodic Z-press so HID transports can be tested on a bare devkit.
+
+endmenu

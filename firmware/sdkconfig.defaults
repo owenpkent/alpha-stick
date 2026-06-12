@@ -1,0 +1,17 @@
+# Alpha Stick V2 defaults. Unknown symbols are silently ignored by idf.py,
+# so esp_tinyusb options here are safe across component versions.
+
+CONFIG_IDF_TARGET="esp32s3"
+
+# 1 ms FreeRTOS tick so vTaskDelayUntil(1) is the 1 kHz loop period
+CONFIG_FREERTOS_HZ=1000
+
+# DevKitC-1 N8R2 class flash
+CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
+CONFIG_PARTITION_TABLE_CUSTOM=y
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions.csv"
+
+# esp_tinyusb: one HID interface (composite report IDs), CDC for config
+CONFIG_TINYUSB_HID_COUNT=1
+CONFIG_TINYUSB_CDC_ENABLED=y
+CONFIG_TINYUSB_CDC_COUNT=1
