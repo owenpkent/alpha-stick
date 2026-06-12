@@ -1,0 +1,28 @@
+name: Accessibility feedback
+description: Feedback on whether this design works for your body and setup
+labels: [accessibility]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Feedback from disabled users outranks every estimate in this repository.
+        Share only what you are comfortable sharing; specifics about your condition
+        are never required, only what the device needs to do for you.
+  - type: textarea
+    id: context
+    attributes:
+      label: How do you (or the person you support) interact with input devices?
+      description: e.g. finger, thumb, chin, mouth, switch user; mounted where; force/range constraints in your own words
+    validations:
+      required: true
+  - type: textarea
+    id: feedback
+    attributes:
+      label: What should Alpha Stick do differently?
+      description: A design that misses your use case is a bug in the requirements
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: What do you use today, and what does it get right or wrong? (optional)

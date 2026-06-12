@@ -1,0 +1,23 @@
+# Builds the ESP32-S3 firmware on changes to firmware/.
+# Known state: the scaffold has not had its first successful build yet
+# (TODO.md Phase 0); making this job green is a welcome first contribution.
+name: firmware
+
+on:
+  push:
+    branches: [main]
+    paths: ['firmware/**', '.github/workflows/firmware.yml']
+  pull_request:
+    paths: ['firmware/**', '.github/workflows/firmware.yml']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build (ESP-IDF v5.3, esp32s3)
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: v5.3.2
+          target: esp32s3
+          path: firmware

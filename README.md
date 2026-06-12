@@ -9,9 +9,11 @@
 
 ---
 
+**New here?** Read the [Executive Summary](docs/EXECUTIVE_SUMMARY.md) (one page) or the [Whitepaper](docs/WHITEPAPER.md) (the full technical story). Want to help? See [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Status
 
-**Planning / Early Development** — Defining hardware design, selecting components, and building community.
+**Phase 0: Bench Validation** — V2 design baseline complete; proving the physics (force, noise, latency) before any product claims.
 
 | Area | Status |
 |------|--------|
@@ -97,7 +99,9 @@ alpha-stick/
 ├── TODO.md                   # Task tracking
 ├── LLM_ONBOARDING.md         # AI assistant reference
 ├── docs/
-│   ├── DESIGN_V2.md          # V2 design baseline (start here)
+│   ├── EXECUTIVE_SUMMARY.md  # One page: what and why
+│   ├── WHITEPAPER.md         # The full technical narrative
+│   ├── DESIGN_V2.md          # V2 design baseline (working doc)
 │   ├── WORKFLOW.md           # Development loops & conventions
 │   ├── HARDWARE.md           # Build reference & BOM
 │   ├── FIRMWARE.md           # Firmware architecture (ESP-IDF)

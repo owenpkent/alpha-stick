@@ -1,0 +1,26 @@
+name: Build / bench report
+description: You printed, built, or measured something. This is the most valuable issue type.
+labels: [build-report]
+body:
+  - type: textarea
+    id: setup
+    attributes:
+      label: Setup
+      description: Printer + material + settings, parts/sensors used, firmware commit
+    validations:
+      required: true
+  - type: textarea
+    id: results
+    attributes:
+      label: Results
+      description: |
+        Fit, feel, and any numbers (force in gf, noise, latency, thread clearance that worked).
+        Format from docs/BENCH_LOG.md is ideal but not required; maintainers will merge solid
+        measurements into the log with credit.
+    validations:
+      required: true
+  - type: textarea
+    id: deviations
+    attributes:
+      label: Deviations from the documented build
+      description: Parameter changes, substituted parts, anything off-script

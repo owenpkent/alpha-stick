@@ -1,0 +1,26 @@
+# Renders every pod v0 part from the parametric source on changes to models/.
+# Catches OpenSCAD syntax errors and geometry that fails to produce a solid.
+name: models
+
+on:
+  push:
+    branches: [main]
+    paths: ['models/**', '.github/workflows/models.yml']
+  pull_request:
+    paths: ['models/**', '.github/workflows/models.yml']
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install OpenSCAD
+        run: sudo apt-get update && sudo apt-get install -y openscad
+      - name: Render all parts
+        run: |
+          set -e
+          for p in hub housing base carrier topper guide; do
+            echo "=== $p ==="
+            openscad -o "/tmp/$p.stl" -D "part=\"$p\"" models/source/pod-v0.scad
+            test -s "/tmp/$p.stl"
+          done

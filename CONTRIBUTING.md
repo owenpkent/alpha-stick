@@ -2,6 +2,30 @@
 
 Thank you for your interest in contributing! Alpha Stick is an open-source project to make adaptive gaming more accessible.
 
+New here? Read [docs/EXECUTIVE_SUMMARY.md](docs/EXECUTIVE_SUMMARY.md) for the
+what-and-why, then [docs/WORKFLOW.md](docs/WORKFLOW.md) for how work happens
+in this repo. This project follows our [Code of Conduct](CODE_OF_CONDUCT.md).
+
+---
+
+## Where to start (good first contributions)
+
+The project is in Phase 0 (bench validation); [TODO.md](TODO.md) is the live
+list. Contributions that help most right now:
+
+1. **Make CI green.** The firmware scaffold has never been compiled; the
+   first successful `idf.py build` (fixing whatever the compiler disagrees
+   with, especially the `VERIFY`-marked spots) is a high-value PR.
+2. **Print and report.** Print the pod v0 parts ([models/](models/)), try the
+   thread fit and pivot feel, and file a Build/Bench Report issue with your
+   printer, settings, and measurements.
+3. **Verify the TMAG5273 register map** in
+   `firmware/components/as_sensing/tmag5273.cpp` against the TI datasheet.
+4. **Design toppers.** Custom toppers in `models/community/` (hollow, under
+   1 g, include the printed mass).
+5. **Platform testing.** Generic HID stick behavior on the Xbox Adaptive
+   Controller's USB ports is designed-for but unverified.
+
 ---
 
 ## Ways to Contribute
@@ -100,15 +124,15 @@ Then open a Pull Request on GitHub.
 - Keep functions focused and small
 - Use `#pragma once` in headers
 
+Match the existing scaffold style: `as::` namespace, snake_case functions,
+one `components/as_*` directory per subsystem (see
+`firmware/components/as_pipeline/` for the house style). New behavior that
+differs between the gaming and drive builds is expressed in Kconfig, never as
+a runtime flag.
+
 ```cpp
-// Good
-int16_t calculateDeadzone(int16_t rawValue, float deadzonePercent) {
-    float normalized = rawValue / 32767.0f;
-    if (fabs(normalized) < deadzonePercent) {
-        return 0;
-    }
-    return rawValue;
-}
+// Good (matches the scaffold)
+float apply_radial_deadzone(float magnitude, float inner, float outer);
 
 // Avoid
 int calc(int v, float d) { return abs(v/32767.0)<d?0:v; }
@@ -116,10 +140,15 @@ int calc(int v, float d) { return abs(v/32767.0)<d?0:v; }
 
 ### 3D Models
 
-- Include source files (FreeCAD, Fusion 360)
-- Export STL with clear naming: `part-name-vX.stl`
-- Use metric units (mm)
-- Design for FDM printing (no supports preferred)
+- The pod mechanism's source of truth is `models/source/pod-v0.scad`
+  (OpenSCAD, parametric): edit named parameters, never hand-edit STLs, and
+  commit the `.scad` and regenerated STLs together
+- New standalone parts (toppers, bodies): any CAD is welcome in
+  `models/community/`, but include the source file and an STL
+- Toppers must be hollow and under 1 g printed (the moving-mass budget in
+  docs/DESIGN_V2.md section 3 is a hard limit); state the printed mass in
+  your PR
+- Use metric units (mm); design for FDM without supports
 
 ### Documentation
 
@@ -134,28 +163,17 @@ int calc(int v, float d) { return abs(v/32767.0)<d?0:v; }
 
 ### Before Submitting
 
-- [ ] Code compiles without errors
-- [ ] Tested on real hardware (if applicable)
-- [ ] Updated relevant documentation
+- [ ] Code compiles without errors (CI builds `firmware/` and renders
+      `models/` automatically on PRs that touch them)
+- [ ] Tested on real hardware (if applicable); measurements go in
+      [docs/BENCH_LOG.md](docs/BENCH_LOG.md)
+- [ ] Walked the change-propagation table in
+      [docs/WORKFLOW.md](docs/WORKFLOW.md) section 5 so docs, CAD, and
+      firmware stay in sync
 - [ ] Added yourself to contributors (optional)
 
-### PR Description Template
-
-```markdown
-## Description
-Brief description of changes.
-
-## Type of Change
-- [ ] Bug fix
-- [ ] New feature
-- [ ] Documentation update
-- [ ] Hardware design
-
-## Testing
-How did you test this?
-
-## Screenshots (if applicable)
-```
+The PR description form is provided automatically
+(`.github/PULL_REQUEST_TEMPLATE.md`).
 
 ### Review Process
 
@@ -184,6 +202,9 @@ If you have a disability and want to share feedback, we especially value your in
 - **Be patient** — This is a volunteer project
 - **Be constructive** — Focus on solutions, not problems
 - **Be inclusive** — Gaming is for everyone
+
+The full standard is the [Code of Conduct](CODE_OF_CONDUCT.md), which applies
+in all project spaces.
 
 ---
 

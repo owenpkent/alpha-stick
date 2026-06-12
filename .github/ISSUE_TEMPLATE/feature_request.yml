@@ -1,0 +1,20 @@
+name: Feature request
+description: Propose a capability, part, or design change
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: What need does this serve?
+      description: Lead with the user and situation, not the mechanism. Accessibility needs especially welcome.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed approach (optional)
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints it must respect
+      description: For anything in the force path, check it against the budgets in docs/DESIGN_V2.md sections 1 and 3 (force, moving mass)
