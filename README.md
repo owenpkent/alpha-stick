@@ -15,6 +15,7 @@
 
 | Area | Status |
 |------|--------|
+| V2 First-Principles Design | 🔄 Baseline written: [docs/DESIGN_V2.md](docs/DESIGN_V2.md) |
 | Hardware Design | ⏳ Planning |
 | 3D Print Files | ⏳ Planning |
 | Firmware | ⏳ Planning |
@@ -129,8 +130,8 @@ alpha-stick/
 
 | Component | Purpose | Est. Cost |
 |-----------|---------|-----------|
-| ESP32-S3 DevKit | Main controller | $8–12 |
-| Analog joystick module | Position input | $2–5 |
+| ESP32-S3 module | Main controller | $4–10 |
+| Sensor pod (dual Hall + magnets + pivot) | Position input, <5 g force | $6–8 |
 | 3.5mm jacks (x4) | External switch inputs | $2 |
 | Buttons (x2–4) | Direct button inputs | $1–2 |
 | 3D-printed enclosure | Housing | $2–5 (filament) |
@@ -157,7 +158,7 @@ alpha-stick/
 
 - **3D Printer** — Any FDM printer (Ender 3, Prusa, etc.)
 - **Soldering iron** — Basic through-hole soldering
-- **PlatformIO** — For firmware development ([install](https://platformio.org/install))
+- **ESP-IDF 5.x** — For firmware development ([install](https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/get-started/index.html))
 - **ESP32-S3 board** — DevKitC or similar
 
 ### Quick Start (Coming Soon)
@@ -169,8 +170,8 @@ git clone https://github.com/owenpkent/alpha-stick.git
 # Navigate to firmware directory
 cd alpha-stick/firmware
 
-# Build and upload (PlatformIO)
-pio run --target upload
+# Build and flash (ESP-IDF PowerShell)
+idf.py set-target esp32s3; idf.py build flash
 
 # Open web configuration
 # Connect to "AlphaStick" WiFi network, navigate to http://192.168.4.1
@@ -271,6 +272,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 ## Related Projects
 
 - **[Project Nimbus](https://github.com/owenpkent/Project-Nimbus)** — Virtual controller interface for accessibility
+- **ATOS** — Modular ESP32-S3 wheelchair platform; Alpha Stick V2 is designed to act as its input node (see [docs/DESIGN_V2.md](docs/DESIGN_V2.md), section 9)
 - **[Joypad OS](https://github.com/joypad-ai/joypad-os)** — Universal controller firmware for adapters and protocol translation (reference architecture)
 - **[Xbox Adaptive Controller](https://www.xbox.com/en-US/accessories/controllers/xbox-adaptive-controller)** — Microsoft's adaptive gaming hub
 - **[QuadStick](https://www.quadstick.com/)** — Commercial mouth-operated controller

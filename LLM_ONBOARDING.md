@@ -39,11 +39,12 @@ I'm Owen — a wheelchair user with muscular dystrophy.
 |------|---------|
 | `README.md` | Project overview, features, quick start |
 | `TODO.md` | Task tracking with checkboxes |
-| `docs/HARDWARE.md` | Hardware design, BOM, schematics |
-| `docs/FIRMWARE.md` | Firmware architecture, build instructions |
+| `docs/DESIGN_V2.md` | V2 design baseline: rationale, budgets, roadmap |
+| `docs/HARDWARE.md` | Build reference: parts, pins, wiring, BOM |
+| `docs/FIRMWARE.md` | Firmware architecture (ESP-IDF), build instructions |
 | `docs/PRINTING.md` | 3D printing guide and settings |
-| `firmware/platformio.ini` | PlatformIO build configuration |
-| `firmware/src/main.cpp` | Firmware entry point |
+| `firmware/sdkconfig.defaults` | ESP-IDF build configuration |
+| `firmware/main/main.cpp` | Firmware entry point |
 | `models/stl/` | Ready-to-print 3D models |
 
 ---
@@ -51,10 +52,14 @@ I'm Owen — a wheelchair user with muscular dystrophy.
 ## Tech Stack
 
 - **Microcontroller:** ESP32-S3 (USB HID + Bluetooth LE)
-- **Framework:** Arduino/PlatformIO
-- **Protocols:** USB HID, Bluetooth HID, WiFi (for config)
+- **Framework:** ESP-IDF 5.x (TinyUSB + NimBLE); moved off Arduino/PlatformIO in V2
+- **Protocols:** USB composite HID, BLE HID, ESP-NOW, UART AS-Link (ATOS), WiFi (for config)
 - **3D Modeling:** FreeCAD or Fusion360
 - **PCB Design:** KiCad or EasyEDA
+
+**V2 design baseline:** `docs/DESIGN_V2.md` is the source of truth (contactless dual-Hall
+sensing, magnetic centering 1-8 gf, <5 gf force target, sensor pod architecture). HARDWARE.md
+and FIRMWARE.md match it. ISOMETRIC_PARTS.md is archived.
 
 ---
 
@@ -96,25 +101,23 @@ chore: maintenance tasks
 
 | Component | Recommended Part | Purpose |
 |-----------|-----------------|---------|
-| MCU | ESP32-S3-DevKitC | Main controller |
-| Joystick | KY-023 or PSP-style | Analog input |
+| MCU | ESP32-S3-MINI-1 (DevKitC for bench) | Main controller |
+| Position sensing | 2x TMAG5273 3D Hall + N52 diametric magnet | Contactless, <5 gf stick |
+| Centering | Ring magnet on threaded carrier | Adjustable 1-8 gf return force |
 | Buttons | 6mm tactile | Direct input |
-| Jacks | PJ-307 3.5mm | External switches |
-| Case | 3D printed PLA/PETG | Enclosure |
+| Jacks | PJ-320A 3.5mm | External switches |
+| Case | 3D printed PLA/PETG | Enclosure + sensor pod bodies |
 
 ---
 
 ## Quick Commands
 
 ```powershell
-# Build firmware
-cd C:\Users\Owen\dev\alpha-stick\firmware; pio run
+# Build firmware (ESP-IDF PowerShell)
+cd C:\Users\Owen\dev\alpha-stick\firmware; idf.py build
 
-# Upload firmware
-pio run --target upload
-
-# Monitor serial output
-pio device monitor
+# Flash and monitor
+idf.py -p COM5 flash monitor
 
 # Open in VS Code
 code C:\Users\Owen\dev\alpha-stick

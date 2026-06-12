@@ -4,7 +4,34 @@ Task tracking for the Alpha Stick project.
 
 ---
 
-## Phase 1: Foundation (Current)
+## Phase 0: V2 Redesign Validation (Current)
+
+First-principles redesign baseline: see [docs/DESIGN_V2.md](docs/DESIGN_V2.md). Bench-validate the core physics before any enclosure or PCB work.
+
+### Sensing Bench
+- [ ] **Breadboard dual TMAG5273 + tilting magnet** and measure field swing, noise, effective bits at 1 kHz
+- [ ] **Decide TMAG5273 vs MLX90393** from bench data (need >=8 effective bits/axis)
+- [ ] **Verify Z-press detection** (gap change) with clean hysteresis at <5 gf
+
+### Mechanics Bench
+- [ ] **Prototype magnetic centering + threaded force adjuster**, confirm 1-8 gf range with gram gauge
+- [ ] **Measure ball-in-PTFE pivot breakout force** (<0.5 gf target) and return-to-center repeatability
+- [ ] **Print sensor pod v0** (pivot + magnet + pod PCB outline + adjuster carrier)
+- [ ] **Weigh moving assembly** against the 2.5 g budget
+
+### Firmware Spikes
+- [ ] **ESP-IDF TinyUSB composite spike** (gamepad + mouse + CDC) at 1 kHz on S3 devkit
+- [ ] **BLE HID multi-report spike** (gamepad + mouse in one HID service)
+- [ ] **Measure wired stimulus-to-report latency** (<5 ms target)
+
+### Integration Groundwork
+- [ ] **Draft AS-Link frame header** (shared .h) and an ATOS gateway module skeleton
+- [ ] **Test a generic HID stick against the XAC USB port** to de-risk the Xbox path
+- [x] **Rewrite HARDWARE.md and FIRMWARE.md** to match the V2 baseline
+
+---
+
+## Phase 1: Foundation (largely superseded by Phase 0, see docs/DESIGN_V2.md)
 
 ### Hardware Design
 - [ ] **Research joystick modules** — Compare analog vs hall-effect options
