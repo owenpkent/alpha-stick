@@ -39,6 +39,7 @@ I'm Owen — a wheelchair user with muscular dystrophy.
 |------|---------|
 | `README.md` | Project overview, features, quick start |
 | `TODO.md` | Task tracking with checkboxes |
+| `docs/WORKFLOW.md` | Development loops, change-propagation rules, commands |
 | `docs/DESIGN_V2.md` | V2 design baseline: rationale, budgets, roadmap |
 | `docs/HARDWARE.md` | Build reference: parts, pins, wiring, BOM |
 | `docs/FIRMWARE.md` | Firmware architecture (ESP-IDF), build instructions |

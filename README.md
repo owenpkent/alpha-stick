@@ -97,8 +97,12 @@ alpha-stick/
 ├── TODO.md                   # Task tracking
 ├── LLM_ONBOARDING.md         # AI assistant reference
 ├── docs/
-│   ├── HARDWARE.md           # Hardware design & BOM
-│   ├── FIRMWARE.md           # Firmware architecture
+│   ├── DESIGN_V2.md          # V2 design baseline (start here)
+│   ├── WORKFLOW.md           # Development loops & conventions
+│   ├── HARDWARE.md           # Build reference & BOM
+│   ├── FIRMWARE.md           # Firmware architecture (ESP-IDF)
+│   ├── PHASE0_PARTS.md       # Bench parts list
+│   ├── BENCH_LOG.md          # Measured results
 │   ├── PRINTING.md           # 3D printing guide
 │   ├── ASSEMBLY.md           # Assembly instructions
 │   └── CONFIGURATION.md      # Configuration guide
