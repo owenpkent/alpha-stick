@@ -55,7 +55,7 @@ softening a conventional joystick:
 | Piece | State |
 |-------|-------|
 | Design baseline (physics, budgets, architecture) | Complete |
-| Firmware (ESP-IDF, USB composite, processing pipeline) | Scaffold complete, builds pending hardware bring-up |
+| Firmware (ESP-IDF, USB composite, processing pipeline) | Compiles clean in CI; hardware bring-up pending |
 | Bench rig CAD (parametric, printable) | Complete |
 | Bench validation (force, noise, latency) | Starting: parts list ready, nothing measured yet |
 

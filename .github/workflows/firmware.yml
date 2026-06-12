@@ -1,6 +1,4 @@
 # Builds the ESP32-S3 firmware on changes to firmware/.
-# Known state: the scaffold has not had its first successful build yet
-# (TODO.md Phase 0); making this job green is a welcome first contribution.
 name: firmware
 
 on:

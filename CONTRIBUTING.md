@@ -13,9 +13,9 @@ in this repo. This project follows our [Code of Conduct](CODE_OF_CONDUCT.md).
 The project is in Phase 0 (bench validation); [TODO.md](TODO.md) is the live
 list. Contributions that help most right now:
 
-1. **Make CI green.** The firmware scaffold has never been compiled; the
-   first successful `idf.py build` (fixing whatever the compiler disagrees
-   with, especially the `VERIFY`-marked spots) is a high-value PR.
+1. **First hardware bring-up.** The firmware compiles in CI but has never run
+   on a device: flash a bare ESP32-S3 devkit and confirm the simulation-mode
+   gamepad demo (`firmware/README.md` checklist), then report what you saw.
 2. **Print and report.** Print the pod v0 parts ([models/](models/)), try the
    thread fit and pivot feel, and file a Build/Bench Report issue with your
    printer, settings, and measurements.

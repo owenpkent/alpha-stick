@@ -2,11 +2,12 @@
 
 ESP-IDF 5.x scaffold implementing the architecture in [docs/FIRMWARE.md](../docs/FIRMWARE.md).
 
-> **Status: scaffold, not yet built on hardware.** The structure, task graph, pipeline math,
-> and AS-Link wire format are real; the TMAG5273 register values and the esp_tinyusb config
-> struct are written from datasheet/API memory and flagged with VERIFY comments. The Phase 0
-> firmware spikes ([TODO.md](../TODO.md)) consist of building this, fixing whatever the
-> compiler and the bench disagree with, and measuring.
+> **Status: compiles clean in CI (ESP-IDF v5.3.2, esp32s3); not yet run on hardware.**
+> The structure, task graph, pipeline math, and AS-Link wire format are real. The TMAG5273
+> register values are written from datasheet memory and flagged with VERIFY comments;
+> compiling proves nothing about them. The remaining Phase 0 firmware spikes
+> ([TODO.md](../TODO.md)) are on-device: flash, enumerate, verify the simulation demo,
+> then measure.
 
 ## Simulation mode
 
@@ -50,10 +51,9 @@ Options live under `menuconfig -> Alpha Stick`:
 | `components/as_config/` | profile defaults, NVS persistence | minimal working |
 | `components/as_web/` | WiFi AP + web UI | stub |
 
-## First-build checklist
+## Bring-up checklist
 
-1. `idf.py build`: expect to touch up esp_tinyusb config-struct field names if the component
-   API drifted (see `as_hid_usb/usb_hid.c`, marked VERIFY).
+1. `idf.py build` (CI already proves this passes on ESP-IDF v5.3.2).
 2. Flash a bare devkit, open Windows `joy.cpl`: gamepad circles from simulation mode.
 3. Wire a TMAG5273 breakout (SDA 8, SCL 9, 3V3, GND), wave a magnet: log line flips from
    SIMULATION to LIVE and the axes follow the magnet.
