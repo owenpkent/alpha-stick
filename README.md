@@ -107,10 +107,10 @@ alpha-stick/
 │   ├── pcb/                  # PCB design files
 │   └── bom/                  # Bill of materials
 ├── firmware/
-│   ├── src/                  # ESP32 firmware source
-│   ├── include/              # Header files
-│   ├── platformio.ini        # PlatformIO config
-│   └── config/               # Default configurations
+│   ├── main/                 # Entry point, mode supervisor
+│   ├── components/           # Sensing, pipeline, HID, AS-Link, config
+│   ├── web/                  # Web config UI source
+│   └── sdkconfig.defaults    # ESP-IDF configuration
 ├── models/
 │   ├── stl/                  # Ready-to-print STL files
 │   ├── step/                 # STEP files for modification
@@ -218,7 +218,7 @@ We welcome contributions from everyone! Areas where we especially need help:
 
 - **3D modeling** — Enclosure designs for different needs
 - **PCB design** — If you have KiCad/EasyEDA experience
-- **Firmware development** — ESP32, Arduino, Bluetooth HID
+- **Firmware development** — ESP32, ESP-IDF, Bluetooth HID
 - **Testing** — Especially from users with disabilities
 - **Documentation** — Tutorials, translations, videos
 

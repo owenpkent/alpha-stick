@@ -86,7 +86,7 @@ chore: maintenance tasks
 ```
 
 ### Code Style
-- ESP32 firmware: C++ with Arduino conventions
+- ESP32 firmware: C++ on ESP-IDF 5.x (FreeRTOS tasks, components)
 - Web config: HTML/CSS/JS (vanilla, no frameworks)
 - Python scripts: PEP 8
 

@@ -1,359 +1,212 @@
 # 3D Printing Guide
 
-Instructions for printing Alpha Stick enclosure and accessories.
+Printed parts for Alpha Stick **V2**: the sensor pod mechanism, the bodies it drops into, and
+toppers. Geometry is being finalized through Phase 0 bench work ([TODO.md](../TODO.md));
+settings below are the targets the parts are designed around.
 
 ---
 
 ## Overview
 
-Alpha Stick uses a modular 3D-printed enclosure designed for:
+V2 splits printing into three groups:
 
-- **Easy printing** — No supports needed for most parts
-- **Easy assembly** — Snap-fit and screw connections
-- **Customization** — Multiple top plate options
-- **Mounting** — Compatible with standard camera mounts
-
----
-
-## Print Files Location
+1. **Pod mechanism parts** (precision matters): pod housing, adjuster carrier, stick hub
+2. **Bodies** (forgiving): desktop base, top plate, thumb puck, chin-boom hardware
+3. **Toppers** (mass matters): ball, dish, lip bar, extensions
 
 ```
 models/
-├── stl/                    # Ready-to-print files
-│   ├── base-v1.stl         # Main enclosure base
-│   ├── top-standard-v1.stl # Standard top plate
-│   ├── top-palm-v1.stl     # Palm rest variant
-│   ├── mount-adapter.stl   # 1/4-20 camera mount
-│   ├── button-cap-flat.stl # Flat button caps
-│   ├── button-cap-dome.stl # Domed button caps
-│   └── joystick-knob.stl   # Custom joystick topper
-├── step/                   # STEP files for modification
-└── source/                 # FreeCAD/Fusion360 files
++-- stl/
+|   +-- pod/
+|   |   +-- pod-housing-v2.stl        # PTFE cup bore, PCB bosses, M12x0.75 internal thread
+|   |   +-- adjuster-carrier-v2.stl   # ring magnet recess, M12x0.75 external thread, detents
+|   |   +-- stick-hub-v2.stl          # magnet + washer recesses, tube bore, ball cup
+|   +-- bodies/
+|   |   +-- base-desktop-v2.stl       # main PCB + pod bay + jack/USB cutouts
+|   |   +-- top-plate-v2.stl
+|   |   +-- thumb-puck-v2.stl         # 30 mm pod-only puck
+|   |   +-- mount-adapter.stl         # 1/4-20 + AMPS
+|   |   +-- button-cap-flat.stl
+|   |   +-- button-cap-dome.stl
+|   +-- toppers/
+|       +-- topper-ball-8mm.stl
+|       +-- topper-dish-14mm.stl
+|       +-- topper-lip-bar.stl
+|       +-- topper-ext-20.stl
+|       +-- topper-ext-40.stl
++-- step/                             # for modification
++-- source/                           # FreeCAD/Fusion360
 ```
 
 ---
 
-## Recommended Print Settings
+## Per-Part Settings (the table that matters)
 
-### General Settings
+| Part | Layer | Walls | Infill | Material | Notes |
+|------|-------|-------|--------|----------|-------|
+| Pod housing | 0.12 mm | 4 | 40% | PETG/PCTG | Thread + cup bore need the fine layers |
+| Adjuster carrier | 0.12 mm | 4 | 40% | PETG/PCTG | Test-fit thread; see thread tuning below |
+| Stick hub | 0.12 mm | 100% solid | | PETG | Tiny part; solid for magnet retention |
+| Desktop base / top plate | 0.2 mm | 3 | 20% | PLA/PETG | Standard settings |
+| Thumb puck | 0.16 mm | 3 | 25% | PETG | |
+| Mount adapter | 0.16 mm | 4 | 40% | PETG | Thread strength |
+| Button caps | 0.12 mm | | 100% | PLA/PETG/TPU | |
+| **Toppers** | 0.16 mm | 2 | 5% | PLA | **Hollow on purpose: each topper must weigh under 1 g** |
+
+### The topper mass budget is real
+
+The whole moving assembly has a 2.5 g budget ([DESIGN_V2.md](DESIGN_V2.md) section 3); heavy
+toppers make the stick sag on tilted mounts. Print toppers light (2 walls, 5% infill), weigh
+them, and write the mass on the bag. When designing custom toppers, hollow them.
+
+### Thread tuning (housing + carrier)
+
+The M12x0.75 adjuster thread is the only printed precision fit:
+
+- Print both parts on the same printer with the same profile
+- If the carrier binds: add 0.05-0.1 mm horizontal expansion compensation (slicer) and reprint
+  the carrier only
+- The detent spring finger is printed in place; if detents feel mushy at 0.2 mm layers, you
+  skipped the 0.12 mm requirement
+- A dry PTFE-based lubricant (never grease: it migrates to the pivot) is acceptable on the
+  thread
+
+### Pivot seat note
+
+The reference pivot is a machined PTFE cup pressed into the housing. The budget path is a
+printed seat in **PCTG/PETG lined with PTFE tape**: print the seat bore 0.2 mm oversize to
+leave room for the tape layer. PLA works but creeps under the preload over months; prefer
+PETG-class materials anywhere the magnets load the plastic.
+
+---
+
+## Materials
+
+| Material | Use in V2 | Notes |
+|----------|-----------|-------|
+| PLA | Bodies, toppers | Easy, fine for everything that is not preloaded |
+| PETG / PCTG | Pod mechanism, anything magnet-loaded, travel builds | Creep resistance is why |
+| TPU | Button caps, grippy topper sleeves | Optional |
+| ABS/ASA | Not needed | Skip unless the unit lives in a hot car |
+
+**Mouthpiece caution:** FDM prints are porous and hard to sanitize. For mouth-operated use,
+the printed part should hold a **commercial food-safe mouthpiece** (CamelBak-style bite valve
+or QuadStick-compatible mouthpiece) rather than being the mouthpiece itself.
+
+---
+
+## General Print Settings
 
 | Setting | Value | Notes |
 |---------|-------|-------|
-| Layer Height | 0.2mm | 0.16mm for finer detail |
-| Wall Count | 3 | Structural strength |
-| Infill | 20% | 30% for durability |
-| Top/Bottom Layers | 4 | Good surface finish |
-| Print Speed | 50mm/s | Slower for better quality |
-| Supports | None | Designed to print without |
-| Adhesion | Brim | Optional, helps prevent warping |
+| Layer height | 0.2 mm bodies, 0.12 mm pod parts | Per-part table above wins |
+| Walls | 3 (4 for threads) | |
+| Top/bottom | 4 | |
+| Speed | 50 mm/s, slower for pod parts | |
+| Supports | None | Parts are designed support-free |
+| Adhesion | Brim optional | |
 
-### Per-Part Settings
-
-| Part | Layer Height | Infill | Notes |
-|------|--------------|--------|-------|
-| Base | 0.2mm | 20% | Standard settings |
-| Top plate | 0.2mm | 20% | Flip upside-down to print |
-| Mount adapter | 0.16mm | 40% | Higher infill for thread strength |
-| Button caps | 0.12mm | 100% | Solid for durability |
-| Joystick knob | 0.12mm | 100% | Solid, smooth finish |
-
----
-
-## Material Recommendations
-
-### PLA (Recommended for beginners)
-
-- **Pros:** Easy to print, low warping, no heated enclosure needed
-- **Cons:** Can warp in hot cars, less impact resistant
-- **Temp:** 200-210°C nozzle, 60°C bed
-- **Best for:** Indoor use, prototyping
-
-### PETG (Recommended for durability)
-
-- **Pros:** More heat resistant, better impact resistance, flexible
-- **Cons:** Stringing, needs higher temps
-- **Temp:** 230-250°C nozzle, 80°C bed
-- **Best for:** Final builds, travel use
-
-### TPU (For soft-touch parts)
-
-- **Pros:** Soft, grippy, impact absorbing
-- **Cons:** Difficult to print, requires direct drive extruder
-- **Temp:** 220-240°C nozzle, 40°C bed
-- **Best for:** Joystick knobs, palm rests, button caps
-
-### ABS (Not recommended)
-
-- **Cons:** Warping, fumes, requires enclosure
-- **Use only if:** You need high heat resistance (>80°C)
-
----
-
-## Printer Requirements
-
-### Minimum Build Volume
-
-| Part | Size (mm) | Notes |
-|------|-----------|-------|
-| Base | 120 x 80 x 40 | Fits most printers |
-| Top plate | 120 x 80 x 15 | Same footprint as base |
-| Mount adapter | 40 x 40 x 20 | Small part |
-
-**Minimum printer:** 150 x 150 x 100mm build volume (Ender 3, Prusa Mini, etc.)
-
-### Recommended Printers
-
-| Printer | Price | Notes |
-|---------|-------|-------|
-| Creality Ender 3 V2 | $250 | Great value, large community |
-| Prusa Mini+ | $400 | Reliable, good quality |
-| Bambu Lab A1 Mini | $300 | Fast, easy to use |
-| Anycubic Kobra 2 | $200 | Budget option |
+Minimum printer: 150 x 150 x 100 mm (Ender 3 class). The largest part (base) is ~120 x 80 mm.
 
 ---
 
 ## Print Orientation
 
-### Base
-
 ```
-Print flat, bottom-down:
+Pod housing: cup bore UP          Carrier: thread UP, magnet recess down
+   +---------+                        +-----+
+   | o cup o |                        |#####|  <- thread
+   |  bosses |                        +--+--+
+   +---------+                        |     |
+   bed                                bed
 
-    ┌─────────────────┐
-    │                 │  ← Top (open)
-    │                 │
-    │                 │
-    └─────────────────┘  ← Bottom (on bed)
-```
-
-### Top Plate
-
-```
-Print upside-down for smooth top surface:
-
-    ┌─────────────────┐  ← Bottom (on bed)
-    │                 │
-    └─────────────────┘  ← Top (smooth)
+Stick hub: tube bore UP           Base: flat, bottom down
+   +--+                           Top plate: top face DOWN (smooth)
+   |  |  <- bore                  Toppers: stem down, no supports
+   +--+
+   bed
 ```
 
-### Mount Adapter
-
-```
-Print thread-side up:
-
-         ┌───┐
-         │   │  ← Thread (top)
-    ─────┴───┴─────
-         Base (on bed)
-```
+Orientation matters most on the hub and housing: the magnet recesses and cup bore should be
+printed as horizontal circles (around the Z axis) so they come out round.
 
 ---
 
-## Assembly
+## Bodies: One Pod, Many Builds
 
-### Required Hardware
+| Body | Status | Purpose |
+|------|--------|---------|
+| Desktop base | V2 default | Main PCB + pod, palm-friendly, jack/USB access |
+| Thumb puck | V2 | Pod-only 30 mm puck on a cable, for tray mounting |
+| Chin boom pod | Planned | Pod + cable on a gooseneck/boom clamp |
+| Mouth-stick frame | Planned | Vertical frame, sip/puff tube routing, bite-valve holder |
+| Dual-stick base | Backlog | Two pods, one main board |
 
-| Item | Quantity | Size | Purpose |
-|------|----------|------|---------|
-| M3 x 8mm screws | 4 | Phillips or hex | Base to top |
-| M3 heat-set inserts | 4 | M3 x 5mm | Thread into plastic |
-| M3 x 5mm screws | 2 | Phillips or hex | PCB mounting |
-
-### Assembly Steps
-
-1. **Insert heat-set inserts** (optional but recommended)
-   - Heat soldering iron to 200°C
-   - Press inserts into base holes
-   - Let cool before handling
-
-2. **Install electronics**
-   - Place ESP32 in mounting slot
-   - Secure with M3 x 5mm screws
-   - Connect joystick and buttons
-
-3. **Route wires**
-   - Use wire channels in base
-   - Ensure no pinching when closing
-
-4. **Attach top plate**
-   - Align joystick through hole
-   - Insert M3 x 8mm screws
-   - Tighten evenly (don't over-tighten)
-
-5. **Install button caps and joystick knob**
-   - Press-fit onto switches and joystick
+All bodies accept the same pod and the same 6-pin cable; print the body your mounting
+situation needs.
 
 ---
 
-## Enclosure Variants
+## Mounting
 
-### Standard (v1)
-
-- Basic rectangular enclosure
-- 120mm x 80mm x 45mm
-- Single joystick + 2 buttons + 4 jacks
-- Palm rest area
-
-### Compact (Planned)
-
-- Reduced footprint
-- 90mm x 60mm x 35mm
-- Single joystick + 2 buttons
-- Minimal jacks
-
-### Extended (Planned)
-
-- Full-size layout
-- 150mm x 100mm x 50mm
-- Dual joystick option
-- 8 buttons + 4 jacks
-- OLED display cutout
-
-### Mouth-Operated (Planned)
-
-- Vertical orientation
-- Gooseneck mount compatible
-- Sip/puff tube integration
-- Inspired by QuadStick
+- Base and puck carry the **AMPS hole pattern** plus a **1/4-20 brass insert**: RAM mounts,
+  Magic Arms, tripods, wheelchair tray clamps
+- Set the insert with a soldering iron at ~220 C, flush or slightly proud, let cool fully
+  before loading
 
 ---
 
-## Mounting Options
+## Hardware for Printed Parts
 
-### 1/4-20 Camera Mount (Included)
-
-Standard camera tripod thread, compatible with:
-- RAM mounts
-- Magic Arms
-- Tripods
-- Clamps
-
-```
-     ┌─────┐
-     │Alpha│
-     │Stick│
-     └──┬──┘
-        │  ← Mount adapter
-     ───┴───
-        ▼
-   Camera mount / Magic Arm
-```
-
-### Wheelchair Tray Mount (Planned)
-
-- Clamp-style attachment
-- No drilling required
-- Adjustable angle
-
-### Desk Mount (Planned)
-
-- C-clamp base
-- Articulating arm
-- Height adjustable
-
----
-
-## Customization
-
-### Modifying Designs
-
-Source files are available in `models/source/` for:
-
-- **FreeCAD** (free, open source)
-- **Fusion 360** (free for personal use)
-
-#### Common Modifications
-
-1. **Joystick hole size** — Adjust for different joystick modules
-2. **Button spacing** — Custom layouts for different hand sizes
-3. **Palm rest angle** — Ergonomic adjustments
-4. **Jack locations** — Move 3.5mm jacks to preferred side
-
-### Color Options
-
-Print in any color! Suggested schemes:
-
-| Theme | Base | Top | Buttons |
-|-------|------|-----|---------|
-| Classic | Black | Black | Grey |
-| Xbox | Black | Green | Green |
-| PlayStation | Black | Blue | Blue |
-| High Contrast | Black | White | Yellow |
-| Fun | Any | Any | Mixed |
+| Item | Qty | Use |
+|------|-----|-----|
+| M3 x 8 mm + heat-set inserts | 4 | Base to top plate |
+| M3 x 5 mm | 2-4 | PCB standoffs |
+| M2 brass or nylon screws | 2-3 | Pod PCB (**non-magnetic, near sensors**) |
+| 1/4-20 brass insert | 1 | Mounting |
 
 ---
 
 ## Troubleshooting
 
-### Warping
-
-- **Cause:** Bed adhesion issues, drafts, cooling
-- **Fix:** Clean bed, use brim, enclose printer, slow first layer
-
-### Layer Separation
-
-- **Cause:** Under-extrusion, low temperature
-- **Fix:** Increase temp 5-10°C, check for clogs, calibrate flow
-
-### Stringing
-
-- **Cause:** Retraction settings, temperature too high
-- **Fix:** Enable retraction (5-6mm), reduce temp, dry filament
-
-### Poor Surface Finish
-
-- **Cause:** Fast printing, layer height too high
-- **Fix:** Slow down, use 0.16mm layers, check belt tension
-
-### Parts Don't Fit
-
-- **Cause:** Printer calibration, elephant foot
-- **Fix:** Calibrate X/Y steps, adjust horizontal expansion in slicer
-
----
-
-## Tips for Best Results
-
-1. **Level your bed** — First layer adhesion is crucial
-2. **Use fresh filament** — Moisture degrades quality
-3. **Print a test cube** — Verify calibration before big prints
-4. **Check belt tension** — Loose belts cause artifacts
-5. **Clean nozzle** — Partial clogs cause under-extrusion
-6. **Slow down** — Better quality at 40-50mm/s
-7. **Let parts cool** — Remove from bed when fully cooled
+| Problem | Cause | Fix |
+|---------|-------|-----|
+| Carrier thread binds | Over-extrusion / no compensation | Horizontal expansion -0.05 to -0.1 mm, reprint carrier |
+| Detents feel mushy | Layer height too coarse | 0.12 mm on housing + carrier |
+| Stick sits off-center | Cup bore or magnet recess out of round | Reprint with part oriented per the diagrams; check belts |
+| Magnets fall out | Press-fit only | Always glue (thin CA) |
+| Warping | Adhesion/drafts | Clean bed, brim, slow first layer |
+| Stringing on PETG | Temp/retraction | Reduce 5-10 C, dry filament |
+| Parts don't fit | Elephant foot | First-layer squish down, or chamfered reprint |
 
 ---
 
 ## Print Time Estimates
 
-| Part | Time (0.2mm) | Filament |
-|------|--------------|----------|
-| Base | 4-5 hours | ~50g |
-| Top plate | 2-3 hours | ~30g |
-| Mount adapter | 30 min | ~5g |
-| Button caps (set) | 20 min | ~3g |
-| Joystick knob | 15 min | ~2g |
-| **Full set** | **~8 hours** | **~90g** |
+| Part | Time | Filament |
+|------|------|----------|
+| Pod set (housing + carrier + hub) | ~2 h | ~15 g |
+| Desktop base | 4-5 h | ~50 g |
+| Top plate | 2-3 h | ~30 g |
+| Topper set | ~45 min | ~6 g |
+| Mount adapter | 30 min | ~5 g |
+| **Full desktop build** | **~9 h** | **~105 g** |
 
 ---
 
 ## Community Designs
 
-Share your custom designs with the community!
+Custom toppers and bodies are the easiest, highest-value contributions:
 
-- **GitHub:** Submit PRs to `models/community/`
-- **Thingiverse:** Tag with "AlphaStick"
-- **Printables:** Tag with "AlphaStick"
+- **GitHub:** PRs to `models/community/` (include the printed mass of toppers)
+- **Printables/Thingiverse:** tag `AlphaStick`
 
 ---
 
 ## Next Steps
 
-1. Download STL files from `models/stl/`
-2. Slice with your preferred slicer (Cura, PrusaSlicer, etc.)
-3. Print parts per this guide
-4. Assemble per [ASSEMBLY.md](ASSEMBLY.md)
-5. Share your build!
+1. Print a pod set at 0.12 mm and the desktop base at 0.2 mm
+2. Assemble per [ASSEMBLY.md](ASSEMBLY.md)
+3. Calibrate per [CONFIGURATION.md](CONFIGURATION.md)
 
-See [HARDWARE.md](HARDWARE.md) for electronics installation.
-]]>
+See [HARDWARE.md](HARDWARE.md) for the electronics that go inside.

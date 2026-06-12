@@ -1,6 +1,10 @@
 # Assembly Guide
 
-Step-by-step instructions for assembling Alpha Stick.
+Step-by-step instructions for assembling Alpha Stick **V2** (sensor pod + main board).
+
+> **Draft status:** the V2 mechanism is in Phase 0 bench validation ([TODO.md](../TODO.md)).
+> Steps and dimensions here match [DESIGN_V2.md](DESIGN_V2.md) and [HARDWARE.md](HARDWARE.md)
+> and will be finalized with photos once the first pod articles are built.
 
 ---
 
@@ -10,345 +14,191 @@ Step-by-step instructions for assembling Alpha Stick.
 
 | Tool | Purpose |
 |------|---------|
-| Soldering iron (30-40W) | Wire connections |
+| Soldering iron (30-40W) | Connectors, jacks |
 | Solder (60/40 or lead-free) | Electrical joints |
-| Wire strippers | Preparing wires |
-| Phillips screwdriver (#1) | M3 screws |
-| Flush cutters | Trimming wires |
-| Multimeter | Testing connections |
-| Heat gun or lighter | Heat shrink tubing |
+| Flush cutters / wire strippers | Wire prep |
+| Phillips screwdriver (#1) | M2/M3 screws |
+| Cyanoacrylate glue (thin) | **All press-fit magnets get glued** |
+| Multimeter | Continuity checks |
 
-### Optional Tools
+### Strongly Recommended
 
 | Tool | Purpose |
 |------|---------|
-| Helping hands | Hold parts while soldering |
-| Soldering iron with heat-set tip | Installing heat-set inserts |
-| Hot glue gun | Strain relief |
-| Label maker | Wire identification |
+| Gram force gauge (0-50 g) | Verifying the 1-8 gf force range; cheap luggage-scale style works with a pulley |
+| Feeler gauge or 1.5 mm drill shank | Setting the magnet-to-sensor gap |
+| Digital scale (0.1 g) | Checking the 2.5 g moving-mass budget |
+| Heat-set insert tip | M3 inserts in the base |
+
+A US nickel is a calibrated 5.000 g reference mass; two quarters are ~11.3 g. Useful for
+sanity-checking a gram gauge.
 
 ---
 
 ## Parts Checklist
 
-Before assembly, verify you have all components:
+### Sensor pod kit
 
-### Electronics
+- [ ] Pod PCB with 2x TMAG5273 (distinct I2C address variants) and JST-SH connector
+- [ ] Sense magnet: N52 disc, D4 x 2 mm, **diametric**
+- [ ] Ring magnet: N52, ~D10/D5 x 2 mm, axial
+- [ ] Steel washer (M3, centering armature)
+- [ ] 4 mm ball (steel or ceramic)
+- [ ] PTFE cup (machined) or printed seat + PTFE tape
+- [ ] Carbon stick tube (25/40/60 mm to taste)
+- [ ] Printed: pod housing, adjuster carrier, stick hub, topper(s)
+- [ ] Topper magnets: N52 D3 x 1 mm (one per topper + one in the hub)
+- [ ] 6-pin JST-SH cable
 
-- [ ] ESP32-S3 DevKitC (or compatible)
-- [ ] Analog joystick module
-- [ ] Tactile buttons (x2)
-- [ ] 3.5mm mono jacks (x4)
-- [ ] USB-C breakout (if not using devkit USB)
-- [ ] Wires (24-28 AWG, various colors)
-- [ ] Heat shrink tubing
+### Main board kit
 
-### 3D Printed Parts
-
-- [ ] Base enclosure
-- [ ] Top plate
-- [ ] Mount adapter (optional)
-- [ ] Button caps (x2)
-- [ ] Joystick knob
-
-### Hardware
-
-- [ ] M3 x 8mm screws (x4)
-- [ ] M3 heat-set inserts (x4) — optional
-- [ ] M3 x 5mm screws (x2) — PCB mounting
+- [ ] Main PCB (assembled: ESP32-S3-MINI-1, USB-C, jacks, buttons, LEDs)
+- [ ] Battery option: LiPo 503035 + slide switch (only if your board has the charger populated)
+- [ ] Printed: base, top plate, button caps
+- [ ] M3 x 8 mm screws (x4), M3 heat-set inserts (x4), M2 hardware for the pod (brass or nylon,
+      **not steel**, near the sensors)
 
 ---
 
-## Assembly Steps
+## Part A: Sensor Pod
 
-### Step 1: Prepare the Base
+The pod is the whole product; take your time here. Work on a clean bench, away from steel
+shavings (magnets find them for you).
 
-**Install heat-set inserts (recommended):**
+### A1. Mark the sense magnet axis
 
-1. Heat soldering iron to 200-220°C
-2. Place insert on hole, threading facing up
-3. Apply gentle pressure with iron tip
-4. Insert sinks flush with surface
-5. Let cool 30 seconds before handling
-6. Repeat for all 4 corners
+Diametric magnets have north on one *side*, not one face. Before installing:
+
+1. Let the magnet snap sideways onto another magnet; the contact line marks the magnetic axis.
+2. Mark that axis with a paint pen. It must end up aligned with the stick hub's index notch
+   (the firmware calibration absorbs small errors, but starting aligned keeps the sweep clean).
+
+### A2. Build the stick assembly
 
 ```
-       ↓ Iron
-    ┌──┴──┐
-    │ ░░░ │ ← Insert
-    └─────┘
-    ╔═════╗
-    ║     ║ ← Plastic base
+        carbon tube
+            |
+      +-----+-----+    stick hub (printed)
+      | topper mag |   D3x1 in the top recess, glued
+      |   tube     |   tube glued into the bore
+      | washer     |   steel washer seated on the lower shoulder
+      | sense mag  |   D4x2 diametric in the bottom recess, axis on the notch, glued
+      +-----+-----+
+            |
+          (ball)       4 mm ball seats in the hub's bottom cup
 ```
 
-**Alternative (no inserts):** Screw directly into plastic. Works but may strip over time.
+1. Glue the carbon tube into the hub bore (CA, sparingly).
+2. Seat the steel washer on its shoulder; a drop of CA.
+3. Press the sense magnet into the bottom recess with the painted axis on the index notch; CA.
+4. Press the topper magnet into the top recess; CA. **Check polarity against a topper before
+   gluing** so toppers attract rather than repel.
+5. Weigh the finished assembly: **target under 1.5 g** (leaves 1 g for a topper).
+
+### A3. Build the pod housing
+
+1. Press the PTFE cup (or printed seat lined with PTFE tape) into the housing center bore.
+2. Glue the ring magnet into the adjuster carrier recess. Polarity: it must **attract** the
+   steel washer (it will, either way, since the armature is steel; orientation only matters if
+   you later swap the washer for a magnet).
+3. Thread the carrier into the housing from below; stop at the middle detent.
+4. Screw the pod PCB to the housing bosses with **brass or nylon M2** screws, sensors facing
+   up, connector toward the cable channel.
+
+### A4. Marry stick to pod and set the gap
+
+1. Drop the ball into the PTFE cup, lower the stick hub onto it. The ring magnet should pull
+   the assembly down into a seated, centered rest position.
+2. Check the sense-magnet-to-sensor gap: **1.5 mm nominal** (1.0-2.5 mm usable). Adjust with
+   the carrier; the printed stack is designed so the nominal detent lands near 1.5 mm.
+3. Feel test: the stick should deflect with a fingertip brush, return crisply to center from
+   every direction, and have zero perceptible grit. Grit means a contaminated cup: clean the
+   ball and cup with IPA.
+4. Force test (gauge or pulley + coins): full deflection in the 2-4 gf range at the middle
+   detent, reaching roughly 1 gf backed out and 8 gf bottomed.
+
+### A5. Connect and close
+
+1. Plug the JST-SH cable, route through the channel, close the pod lid.
+2. Snap a topper on. Verify it holds against an upside-down shake but releases with a pull.
 
 ---
 
-### Step 2: Prepare Wires
+## Part B: Main Board and Base
 
-Cut and strip wires for each connection:
-
-| Connection | Length | Color (suggested) |
-|------------|--------|-------------------|
-| Joystick VCC | 60mm | Red |
-| Joystick GND | 60mm | Black |
-| Joystick X | 60mm | Yellow |
-| Joystick Y | 60mm | Orange |
-| Joystick button | 60mm | Blue |
-| Button 1 | 50mm | Green |
-| Button 2 | 50mm | Green |
-| Jack 1-4 (x2 each) | 40mm | White |
-
-Strip 3-4mm from each end.
+1. Install M3 heat-set inserts in the base (iron at 200-220 C, press gently, let cool).
+2. Mount the main PCB on its standoffs (M3 x 5 mm).
+3. Jacks and USB-C are board-mounted: align the base cutouts, no panel wiring needed.
+4. Battery option: stick the LiPo in its bay with foam tape, route to the JST-PH, switch into
+   its cutout. **Observe polarity; not all purchased LiPo pigtails match the board footprint.**
+5. Seat the pod in its bay, connect the 6-pin cable to the main board.
+6. Fit the top plate, start all four screws before tightening any, tighten evenly.
+7. Press on button caps.
 
 ---
 
-### Step 3: Solder Joystick
+## Part C: Bring-Up Test
 
-**Joystick module connections:**
+1. Connect USB. The device should enumerate as a composite HID gamepad/mouse/keyboard
+   (Windows: check Device Manager, then "Set up USB game controllers").
+2. Open a monitor for logs:
 
-```
-Joystick Module          ESP32-S3
-  ┌─────────┐
-  │  VCC ───┼──────────── 3.3V
-  │  GND ───┼──────────── GND
-  │  VRx ───┼──────────── GPIO1
-  │  VRy ───┼──────────── GPIO2
-  │  SW  ───┼──────────── GPIO37
-  └─────────┘
+```powershell
+cd C:\Users\Owen\dev\alpha-stick\firmware; idf.py -p COM5 monitor
 ```
 
-1. Solder wires to joystick module pads
-2. Add heat shrink to prevent shorts
-3. Route wires through base channel
+3. Run the **guided calibration sweep** (hold both buttons at boot for config mode, connect to
+   the `AlphaStick` AP, follow the calibration page): center hold, 8 compass points, full
+   circle. See [CONFIGURATION.md](CONFIGURATION.md).
+4. Verify in the web UI live view:
+   - Full circle reaches the rim everywhere (no clipping, no flat spots)
+   - Release from any direction settles within the center dot
+   - Z-press registers at a light push, releases cleanly
+5. Short each 3.5 mm jack tip-to-sleeve with a test cable: buttons fire.
+6. If the dual-sensor health indicator shows disagreement, re-check magnet seating and gap.
 
 ---
 
-### Step 4: Solder Buttons
+## Magnet Handling and Safety
 
-**Button wiring (each button):**
-
-```
-    ┌───┐
-    │   │━━━━━ GPIO (pullup enabled)
-    │ ○ │
-    │   │━━━━━ GND
-    └───┘
-```
-
-1. Solder one leg to GPIO wire
-2. Solder opposite leg to GND wire
-3. Button orientation doesn't matter
-
-**GPIO assignments:**
-- Button 1 → GPIO39
-- Button 2 → GPIO38
-
----
-
-### Step 5: Solder 3.5mm Jacks
-
-**Jack wiring:**
-
-```
-3.5mm Mono Jack
-    ┌─────────┐
-    │ Tip   ──┼──── GPIO (with external pullup)
-    │         │
-    │ Sleeve ─┼──── GND
-    └─────────┘
-```
-
-Each jack needs:
-- Tip → GPIO (with 10K pullup resistor to 3.3V)
-- Sleeve → GND
-
-**GPIO assignments:**
-- Jack 1 → GPIO35
-- Jack 2 → GPIO34
-- Jack 3 → GPIO33
-- Jack 4 → GPIO26
-
-**Add pullup resistors:**
-```
-3.3V ──┬── 10K ──┬── GPIO
-       │         │
-       └─────────┴── Jack Tip
-```
-
-Or use internal pullups in firmware (less reliable with long cables).
-
----
-
-### Step 6: Connect to ESP32
-
-**Soldering to DevKit:**
-
-Use the pin headers on the ESP32 DevKit. You can:
-
-1. **Solder directly** — Permanent but reliable
-2. **Use DuPont connectors** — Removable but can disconnect
-3. **Custom PCB** — Best for production (future)
-
-**Connection summary:**
-
-| ESP32 Pin | Function |
-|-----------|----------|
-| 3.3V | Joystick power |
-| GND | Common ground |
-| GPIO1 | Joystick X |
-| GPIO2 | Joystick Y |
-| GPIO37 | Joystick button |
-| GPIO38 | Button 2 |
-| GPIO39 | Button 1 |
-| GPIO35 | Jack 1 |
-| GPIO34 | Jack 2 |
-| GPIO33 | Jack 3 |
-| GPIO26 | Jack 4 |
-
----
-
-### Step 7: Test Electronics
-
-**Before final assembly, test everything:**
-
-1. Connect USB to computer
-2. Open Arduino Serial Monitor (115200 baud)
-3. Verify joystick readings change when moved
-4. Verify buttons register as pressed
-5. Test each 3.5mm jack with a test cable
-
-**Test script:**
-```cpp
-void setup() {
-    Serial.begin(115200);
-    pinMode(37, INPUT_PULLUP);  // Joystick button
-    pinMode(38, INPUT_PULLUP);  // Button 2
-    pinMode(39, INPUT_PULLUP);  // Button 1
-}
-
-void loop() {
-    Serial.printf("X:%d Y:%d BTN:%d B1:%d B2:%d\n",
-        analogRead(1),
-        analogRead(2),
-        digitalRead(37),
-        digitalRead(39),
-        digitalRead(38)
-    );
-    delay(100);
-}
-```
-
----
-
-### Step 8: Mount Components in Base
-
-**Order of installation:**
-
-1. **Joystick** — Align with hole, secure with screws or hot glue
-2. **3.5mm jacks** — Insert from inside, nut on outside
-3. **Buttons** — Press-fit into mounting holes
-4. **ESP32** — Secure with M3 x 5mm screws
-
-**Wire routing:**
-
-```
-┌─────────────────────────┐
-│  ┌───┐     ┌───────┐    │
-│  │ J │     │ESP32  │    │
-│  │ O │─────│       │    │
-│  │ Y │     │       │    │
-│  └───┘     └───────┘    │
-│                         │
-│  [B1] [B2]    ○ ○ ○ ○   │
-│               Jacks     │
-└─────────────────────────┘
-```
-
-Keep wires flat in channels to prevent pinching.
-
----
-
-### Step 9: Final Assembly
-
-1. **Check clearances** — No wires crossing screw holes
-2. **Test fit top plate** — Verify joystick aligns
-3. **Install top plate** — Start screws in all corners before tightening
-4. **Tighten evenly** — Alternate corners, don't over-tighten
-5. **Install button caps** — Press onto tactile buttons
-6. **Install joystick knob** — Press-fit or screw onto joystick shaft
-
----
-
-### Step 10: Final Test
-
-1. Connect USB to computer
-2. Verify appears as gamepad in device manager
-3. Open "Set up USB game controllers" in Windows
-4. Test all axes and buttons
-5. Verify 3.5mm jacks trigger buttons when shorted
-
-**Congratulations! Your Alpha Stick is complete!**
+- **Glue every magnet.** Press-fits in printed plastic loosen with temperature cycles.
+- Small magnets are an **ingestion hazard**; keep spares away from kids and pets.
+- NdFeB is brittle: hand pressure only, never pliers or hammers.
+- Keep magnets and tools with magnets away from the pod PCB during soldering; a magnetized
+  iron tip near the sensors is a confusing afternoon.
+- People with pacemakers/implants: follow the implant manufacturer's magnet distance guidance.
+- LiPo: protected cells, correct polarity, no unattended charging.
 
 ---
 
 ## Troubleshooting
 
-### Joystick Not Responding
-
-| Symptom | Cause | Fix |
-|---------|-------|-----|
-| No reading | Wiring issue | Check VCC/GND connections |
-| Stuck at 0 or 4095 | Axis wire disconnected | Resolder connection |
-| Jittery values | Noise | Add 100nF cap near ADC pin |
-
-### Buttons Not Working
-
-| Symptom | Cause | Fix |
-|---------|-------|-----|
-| Always pressed | Pullup not enabled | Enable in firmware |
-| Never registers | Bad solder joint | Reflow connection |
-| Intermittent | Cold joint | Resolder with more heat |
-
-### USB Not Detected
-
-| Symptom | Cause | Fix |
-|---------|-------|-----|
-| No device | USB cable (data) | Try different cable |
-| Unknown device | Driver issue | Install ESP32 drivers |
-| Resets constantly | Power issue | Use powered USB hub |
+| Symptom | Likely cause | Fix |
+|---------|--------------|-----|
+| Stick flops, weak return | Carrier backed out too far, washer missing/unseated | Set carrier to middle detent; verify washer |
+| Stick sits off-center | Cup or seat printed off-axis; magnet recess off-center | Reprint housing; check hub concentricity |
+| Gritty feel | Debris in PTFE cup | IPA-clean ball and cup; rebuild on a clean bench |
+| Axes weak or nonlinear in live view | Sense magnet not diametric, or axis badly misaligned | Verify magnet type (A1 step); re-seat on the notch |
+| `cal_valid` stays false | Sweep not run, or gap far off nominal | Set 1.5 mm gap, re-run calibration |
+| Z-click never fires | Preload too high (carrier bottomed) | Back the carrier off a detent or two |
+| Dual-sensor fault | One sensor address wrong, or board flex | Check both sensors enumerate on I2C; reflow |
+| USB unknown device | Cable is charge-only | Use a known data cable |
+| Random resets on WiFi | Brownout on weak USB port | Use a powered port/hub |
 
 ---
 
 ## Maintenance
 
-### Regular Care
-
-- **Clean joystick** — Wipe with dry cloth
-- **Check connections** — Ensure wires haven't loosened
-- **Update firmware** — Check for updates via web UI
-
-### If Something Breaks
-
-- **Button caps** — Reprint from STL files
-- **Joystick** — Replace module (~$3)
-- **Enclosure** — Reprint damaged parts
-
----
-
-## Safety Notes
-
-1. **Unplug before opening** — Prevent electrical damage
-2. **No liquids near device** — Electronics are not waterproof
-3. **Secure mounting** — Prevent falls that could damage device
-4. **Don't over-tighten** — Plastic threads can strip
+- Wipe the stick and toppers with a dry cloth; IPA for the ball/cup if feel degrades.
+- Re-run the calibration sweep after any pod disassembly or magnet change.
+- Re-check the force setting if strength needs change day to day: that is what the carrier
+  detents are for, no tools needed.
+- Firmware updates: web UI upload or `idf.py flash`; see [FIRMWARE.md](FIRMWARE.md).
 
 ---
 
 ## Next Steps
 
-- [CONFIGURATION.md](CONFIGURATION.md) — Set up profiles and sensitivity
-- [FIRMWARE.md](FIRMWARE.md) — Update firmware
-- [README.md](../README.md) — Full project overview
-]]>
+- [CONFIGURATION.md](CONFIGURATION.md): calibration, profiles, modes
+- [PRINTING.md](PRINTING.md): printed parts and settings
+- [DESIGN_V2.md](DESIGN_V2.md): why the mechanism works

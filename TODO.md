@@ -47,7 +47,7 @@ First-principles redesign baseline: see [docs/DESIGN_V2.md](docs/DESIGN_V2.md). 
 - [ ] **Prototype in CAD** — FreeCAD or Fusion360
 
 ### Firmware
-- [ ] **Set up PlatformIO project** — ESP32-S3 target
+- [ ] **Set up ESP-IDF project** — ESP32-S3 target
 - [ ] **Implement USB HID gamepad** — Basic joystick + buttons
 - [ ] **Read analog joystick input** — ADC sampling with smoothing
 - [ ] **Add basic deadzone** — Configurable center deadzone
@@ -101,7 +101,7 @@ First-principles redesign baseline: see [docs/DESIGN_V2.md](docs/DESIGN_V2.md). 
 - [ ] **Optimize power consumption** — For battery operation
 
 ### OTA Updates
-- [ ] **Implement OTA update system** — ArduinoOTA or custom
+- [ ] **Implement OTA update system** — esp_https_ota with A/B rollback
 - [ ] **Create update server/process** — GitHub releases integration
 - [ ] **Add rollback mechanism** — Recover from bad updates
 

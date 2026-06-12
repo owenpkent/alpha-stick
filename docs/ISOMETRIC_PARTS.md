@@ -1,5 +1,9 @@
 # Isometric Joystick Parts List
 
+> **Archived (V2):** the load-cell isometric approach was dropped in the V2 redesign; see
+> [DESIGN_V2.md](DESIGN_V2.md) section 2 for the rationale (sustained-force fatigue, strain
+> gauge drift, complexity). Kept for reference and for anyone who wants to build it anyway.
+
 Specific parts and links for building an isometric (force-sensing, no-movement) joystick for Alpha Stick.
 
 ---

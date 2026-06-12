@@ -94,7 +94,7 @@ Then open a Pull Request on GitHub.
 
 ### Firmware (C++)
 
-- Use Arduino/PlatformIO conventions
+- Use ESP-IDF 5.x conventions (FreeRTOS tasks, esp_err_t returns, components)
 - Meaningful variable names
 - Comment complex logic
 - Keep functions focused and small
