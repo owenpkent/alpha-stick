@@ -45,7 +45,7 @@ Options live under `menuconfig -> Alpha Stick`:
 | `components/as_sensing/` | TMAG5273 driver, sensing task, seqlock mailbox, simulation | driver needs bench verify |
 | `components/as_pipeline/` | profile types, radial deadzone, expo curve, 1-euro filter | implemented, host-testable math |
 | `components/as_modes/` | 1 kHz router task, gamepad/mouse mapping, Z-click hysteresis | gamepad + mouse working paths |
-| `components/as_hid_usb/` | TinyUSB composite descriptors (16-bit gamepad + mouse + keyboard + CDC) | needs first enumeration test |
+| `components/as_hid_usb/` | TinyUSB composite descriptors (16-bit gamepad + mouse + keyboard + CDC), see [README](components/as_hid_usb/README.md) | documented; needs first enumeration test |
 | `components/as_hid_ble/` | BLE HID | stub |
 | `components/as_aslink/` | wire format header (vendorable into ATOS), CRC32, COBS | implemented, host-testable |
 | `components/as_config/` | profile defaults, NVS persistence | minimal working |

@@ -148,8 +148,8 @@ with input speed, so it smooths rest tremor without adding lag to deliberate mot
 
 | Interface | Report ID | Contents |
 |-----------|-----------|----------|
-| HID | 1 | Gamepad: X/Y int16, Z uint8, 16 buttons, hat |
-| HID | 2 | Mouse: 5 buttons, dx/dy int16, wheel int8 |
+| HID | 1 | Gamepad: X/Y int16, Z uint8, 16 buttons |
+| HID | 2 | Mouse: 5 buttons, dx/dy int8, wheel int8 (stock TinyUSB) |
 | HID | 3 | Keyboard: standard 6KRO |
 | CDC | n/a | Config channel (JSON lines), WebSerial-compatible |
 

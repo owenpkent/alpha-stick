@@ -169,5 +169,4 @@ First-principles redesign baseline: see [docs/DESIGN_V2.md](docs/DESIGN_V2.md). 
 
 ---
 
-*Last updated: January 2026*
-]]>
+*Last updated: June 2026*
