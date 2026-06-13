@@ -16,6 +16,7 @@ firmware/build/
 # OS
 .DS_Store
 Thumbs.db
+*.stackdump
 
 # Python
 __pycache__/
@@ -42,4 +43,3 @@ package-lock.json
 # 3D printing
 models/gcode/
 *.gcode
-]]>

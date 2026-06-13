@@ -310,4 +310,3 @@ Hardware designs are released under **CERN-OHL-P v2** (permissive).
 <div align="center">
   <strong>Gaming is for everyone. Let's build it together.</strong>
 </div>
-]]>

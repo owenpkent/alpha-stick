@@ -159,4 +159,3 @@ For dashboard integration:
 1. `README.md` with `## Status` section ✅
 2. `TODO.md` with checkbox items ✅
 3. Add to Constellation's `projects.yaml`
-]]>
