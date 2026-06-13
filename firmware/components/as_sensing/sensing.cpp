@@ -51,6 +51,7 @@ void sensing_task(void *arg)
     Ctx *ctx = static_cast<Ctx *>(arg);
     Pipeline pipeline;
     pipeline.set_profile(config_profile());
+    uint32_t cfg_gen = config_generation();
 
     float baseline_mag = 0.0f;
     if (ctx->live) {
@@ -76,6 +77,13 @@ void sensing_task(void *arg)
     uint32_t prev_us = (uint32_t)esp_timer_get_time();
     for (;;) {
         vTaskDelayUntil(&wake, 1);  // 1 ms with CONFIG_FREERTOS_HZ=1000
+
+        // Pick up config edits pushed over USB CDC without a reboot.
+        const uint32_t gen = config_generation();
+        if (gen != cfg_gen) {
+            pipeline.set_profile(config_profile());
+            cfg_gen = gen;
+        }
 
         const uint32_t now_us = (uint32_t)esp_timer_get_time();
         const float dt_s = (now_us - prev_us) * 1e-6f;

@@ -2,6 +2,8 @@
 
 #include <string.h>
 
+#include "freertos/FreeRTOS.h"
+
 #include "esp_log.h"
 #include "tinyusb.h"
 #include "tusb_cdc_acm.h"
@@ -102,8 +104,34 @@ static const char *s_string_descriptor[] = {
     "Alpha Stick Config",        // 5
 };
 
-// CDC config channel placeholder: logs received bytes until the JSON protocol
-// (docs/FIRMWARE.md, WebSerial) lands.
+// CDC config channel: assemble newline-delimited lines and hand each to the
+// registered handler (as_config's JSON protocol, wired in main).
+static as_cdc_line_cb_t s_cdc_line_cb = NULL;
+static char s_cdc_line[512];
+static size_t s_cdc_len = 0;
+
+void usb_hid_set_cdc_line_handler(as_cdc_line_cb_t cb)
+{
+    s_cdc_line_cb = cb;
+}
+
+void usb_hid_cdc_write(const char *data, unsigned len)
+{
+    unsigned off = 0;
+    while (off < len) {
+        size_t wrote = tinyusb_cdcacm_write_queue(TINYUSB_CDC_ACM_0,
+                                                  (const uint8_t *)data + off,
+                                                  len - off);
+        if (wrote == 0) {
+            // TX FIFO full; flush what is queued and retry the remainder.
+            tinyusb_cdcacm_write_flush(TINYUSB_CDC_ACM_0, pdMS_TO_TICKS(10));
+            continue;
+        }
+        off += wrote;
+    }
+    tinyusb_cdcacm_write_flush(TINYUSB_CDC_ACM_0, pdMS_TO_TICKS(10));
+}
+
 static void cdc_rx_callback(int itf, cdcacm_event_t *event)
 {
     (void)event;
@@ -112,7 +140,23 @@ static void cdc_rx_callback(int itf, cdcacm_event_t *event)
     // Drain the FIFO fully: a JSON config line can exceed one buf, and the
     // callback may not fire again for bytes already buffered.
     while (tinyusb_cdcacm_read(itf, buf, sizeof(buf), &n) == ESP_OK && n > 0) {
-        ESP_LOGI(TAG, "cdc rx %u bytes (config protocol TODO)", (unsigned)n);
+        for (size_t i = 0; i < n; ++i) {
+            const char c = (char)buf[i];
+            if (c == '\n' || c == '\r') {
+                if (s_cdc_len > 0) {
+                    s_cdc_line[s_cdc_len] = '\0';
+                    if (s_cdc_line_cb) {
+                        s_cdc_line_cb(s_cdc_line);
+                    }
+                    s_cdc_len = 0;
+                }
+            } else if (s_cdc_len < sizeof(s_cdc_line) - 1) {
+                s_cdc_line[s_cdc_len++] = c;
+            } else {
+                // Overrun (line longer than the buffer); drop it and resync.
+                s_cdc_len = 0;
+            }
+        }
     }
 }
 

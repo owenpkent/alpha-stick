@@ -67,9 +67,11 @@ are present, but there is no `usb_hid_send_keyboard` writer yet (see Known gaps)
 
 ## CDC config channel
 
-`cdc_rx_callback` currently drains received bytes and logs the count. The JSON-lines
-config protocol (WebSerial-compatible, shared with the web UI) is not implemented yet;
-this is the hook for it.
+`cdc_rx_callback` assembles received bytes into newline-delimited lines and hands each
+to a handler registered with `usb_hid_set_cdc_line_handler`. The wiring in `main` points
+that handler at the `as_config` JSON protocol (get/set/info/save/defaults/reboot), and
+responses go back via `usb_hid_cdc_write`. The protocol and the host tools that drive it
+are documented in [tools/README.md](../../../tools/README.md).
 
 ---
 
@@ -83,6 +85,10 @@ bool usb_hid_ready(void);  // tud_mounted() && HID instance 0 ready
 
 bool usb_hid_send_gamepad(int16_t x, int16_t y, uint8_t z, uint16_t buttons);
 bool usb_hid_send_mouse(uint8_t buttons, int8_t dx, int8_t dy, int8_t wheel);
+
+// CDC config channel
+void usb_hid_set_cdc_line_handler(as_cdc_line_cb_t cb);  // one newline-framed line per call
+void usb_hid_cdc_write(const char *data, unsigned len);  // response back on the CDC channel
 ```
 
 The send functions return the TinyUSB queue result (false if the endpoint is busy or

@@ -23,6 +23,7 @@ struct Blob {
 };
 
 Profile s_profile{};
+uint32_t s_generation = 0;
 
 }  // namespace
 
@@ -50,9 +51,15 @@ const Profile &config_profile()
     return s_profile;
 }
 
+uint32_t config_generation()
+{
+    return s_generation;
+}
+
 void config_set_profile(const Profile &p)
 {
     s_profile = p;
+    ++s_generation;
     nvs_handle_t h;
     if (nvs_open(kNamespace, NVS_READWRITE, &h) != ESP_OK) {
         ESP_LOGE(TAG, "NVS open failed, profile not persisted");

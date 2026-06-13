@@ -1,8 +1,15 @@
+#include <cstdlib>
+#include <cstring>
+
 #include "esp_log.h"
+#include "esp_system.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include "nvs_flash.h"
 #include "sdkconfig.h"
 
 #include "as_config/config.h"
+#include "as_config/config_protocol.h"
 #include "as_hid_ble/ble_hid.h"
 #include "as_hid_usb/usb_hid.h"
 #include "as_modes/router.h"
@@ -13,6 +20,22 @@
 static const char *TAG = "main";
 
 static as::Mailbox<as::StickSample> s_mailbox;
+
+// Bridge USB CDC config lines to the JSON protocol. Runs in the TinyUSB task
+// context; the response is written back on the same CDC channel.
+extern "C" void as_cdc_on_line(const char *line)
+{
+    char *resp = as::config_protocol_handle_line(line);
+    if (resp) {
+        as::usb_hid_cdc_write(resp, (unsigned)strlen(resp));
+        as::usb_hid_cdc_write("\n", 1);
+        free(resp);
+    }
+    if (as::config_protocol_take_reboot()) {
+        vTaskDelay(pdMS_TO_TICKS(100));  // let the ack drain first
+        esp_restart();
+    }
+}
 
 extern "C" void app_main(void)
 {
@@ -34,6 +57,7 @@ extern "C" void app_main(void)
 
     as::config_init();
     as::usb_hid_init();
+    as::usb_hid_set_cdc_line_handler(as_cdc_on_line);
     as::ble_hid_init();
     as::web_init();
 

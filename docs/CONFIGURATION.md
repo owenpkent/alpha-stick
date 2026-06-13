@@ -23,6 +23,19 @@ The USB CDC interface speaks the same JSON config protocol. Any WebSerial-capabl
 or a serial terminal can read/write settings while the device keeps working. Good for quick
 tweaks and scripting.
 
+### Desktop tools (implemented)
+
+The native host tools in [tools/](../tools/) drive the USB CDC protocol today, no WiFi needed:
+
+- **Configurator** (`python tools/configurator.py`): a GUI to change axes, deadzone, curve,
+  filter, mouse speed, button mappings, and macros. Stick/mouse changes apply live.
+- **Flasher** (`python tools/as_flash.py`): a developer CLI to flash firmware, erase, monitor,
+  and read/push profiles.
+
+Stick and mouse settings apply immediately. Button mappings and macros are authored and saved
+now; the firmware runs them once the jack/sip-puff input subsystem lands. See
+[tools/README.md](../tools/README.md).
+
 ---
 
 ## Calibration and Tare

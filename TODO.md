@@ -27,6 +27,8 @@ First-principles redesign baseline: see [docs/DESIGN_V2.md](docs/DESIGN_V2.md). 
 - [ ] **ESP-IDF TinyUSB composite spike** (gamepad + mouse + CDC) at 1 kHz on S3 devkit; verify DUAL-mode dual-report streaming and cross-task `tud_` call safety under sustained load
 - [ ] **BLE HID multi-report spike** (gamepad + mouse in one HID service)
 - [ ] **Measure wired stimulus-to-report latency** (<5 ms target)
+- [x] **USB CDC JSON config protocol + native host tools** (get/set/info/save/defaults/reboot; GUI configurator + CLI flasher in [tools/](tools/))
+- [ ] **Jack + sip/puff input subsystem and button/macro runtime engine** (unblocks the button maps and macros the configurator already authors)
 
 ### Integration Groundwork
 - [ ] **Draft AS-Link frame header** (shared .h) and an ATOS gateway module skeleton

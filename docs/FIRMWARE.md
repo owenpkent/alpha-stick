@@ -228,7 +228,11 @@ authority.
 - **Profiles:** JSON documents in NVS/LittleFS; switch via button combo, jack, or web UI.
 - **Web UI:** hold both buttons at boot -> WiFi AP `AlphaStick` -> live stick visualization,
   guided calibration sweep, curve editor, profile manager, OTA upload.
-- **WebSerial:** the same JSON config protocol over USB CDC, for no-WiFi setups and scripting.
+- **USB CDC config protocol (implemented):** newline-delimited JSON over the CDC channel
+  (`as_config/config_protocol.cpp`): get/set/info/save/defaults/reboot. Stick/mouse edits
+  apply live (the sensing task re-reads on a config generation bump). Driven by the native
+  host tools in [tools/](../tools/) (GUI configurator + CLI flasher). The WiFi web UI above
+  is still pending; the CDC protocol is the working config path today.
 - Schema is shared with Project Nimbus where concepts overlap (curves, deadzone, profiles).
 
 ```json
