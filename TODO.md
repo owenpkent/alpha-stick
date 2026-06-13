@@ -24,7 +24,7 @@ First-principles redesign baseline: see [docs/DESIGN_V2.md](docs/DESIGN_V2.md). 
 - [ ] **Weigh moving assembly** against the 2.5 g budget
 
 ### Firmware Spikes
-- [ ] **ESP-IDF TinyUSB composite spike** (gamepad + mouse + CDC) at 1 kHz on S3 devkit
+- [ ] **ESP-IDF TinyUSB composite spike** (gamepad + mouse + CDC) at 1 kHz on S3 devkit; verify DUAL-mode dual-report streaming and cross-task `tud_` call safety under sustained load
 - [ ] **BLE HID multi-report spike** (gamepad + mouse in one HID service)
 - [ ] **Measure wired stimulus-to-report latency** (<5 ms target)
 

@@ -40,6 +40,7 @@ void router_task(void *arg)
     MouseAccum accum;
     bool z_latched = false;
     bool logged_silent_mode = false;
+    bool dual_phase = false;
 
     TickType_t wake = xTaskGetTickCount();
     for (;;) {
@@ -73,17 +74,33 @@ void router_task(void *arg)
         const bool gamepad = (p.mode == Mode::GAMEPAD || p.mode == Mode::DUAL);
         const bool mouse = (p.mode == Mode::MOUSE || p.mode == Mode::DUAL);
 
-        if (gamepad) {
+        // All report IDs share one HID IN endpoint, so at most one report fits
+        // per tick. In DUAL mode alternate which report claims the endpoint;
+        // otherwise the gamepad (submitted first) leaves the endpoint busy and
+        // the mouse report is dropped every tick. Each then streams at ~500 Hz.
+        bool emit_gamepad = gamepad;
+        bool emit_mouse = mouse;
+        if (gamepad && mouse) {
+            emit_gamepad = !dual_phase;
+            emit_mouse = dual_phase;
+            dual_phase = !dual_phase;
+        }
+
+        if (mouse) {
+            // Integrate every tick, even one that belongs to the gamepad, so a
+            // skipped tick's motion is carried, not lost. Fractional px
+            // accumulate so slow drifts survive int8 truncation.
+            accum.x += s.x * p.mouse_max_px_s * 0.001f;
+            accum.y += s.y * p.mouse_max_px_s * 0.001f;
+        }
+
+        if (emit_gamepad) {
             const uint16_t buttons = z_latched ? 0x0001 : 0x0000;
             const uint8_t z8 = (uint8_t)std::lround(std::clamp(s.z, 0.0f, 1.0f) * 255.0f);
             usb_hid_send_gamepad(to_i16(s.x), to_i16(s.y), z8, buttons);
         }
 
-        if (mouse) {
-            // Velocity mode: deflection -> px/s, fractional px accumulated so
-            // slow drifts are not lost to int8 truncation.
-            accum.x += s.x * p.mouse_max_px_s * 0.001f;
-            accum.y += s.y * p.mouse_max_px_s * 0.001f;
+        if (emit_mouse) {
             const int8_t dx = accum.take(accum.x);
             const int8_t dy = accum.take(accum.y);
             const uint8_t buttons = (!gamepad && z_latched) ? 0x01 : 0x00;  // left

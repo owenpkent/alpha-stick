@@ -89,13 +89,20 @@ The send functions return the TinyUSB queue result (false if the endpoint is bus
 the device is not mounted). The router task is expected to gate on `usb_hid_ready()`
 and drop, not block, when USB is not the active sink.
 
+All three report IDs share one HID IN endpoint, so only one report fits per host poll.
+A caller submitting two reports back to back (gamepad then mouse in DUAL mode) will see
+the second return false, because the first left the endpoint busy. The router handles
+this by alternating gamepad and mouse across ticks (`as_modes/router.cpp`); any new
+caller must serialize the same way rather than submit multiple reports per poll.
+
 The header wraps the API in `namespace as { extern "C" { ... } }` under C++, so it is
 callable from both the C implementation and the C++ router.
 
 ### TinyUSB callbacks implemented here
 
 - `tud_hid_descriptor_report_cb` returns the combined report descriptor.
-- `tud_hid_get_report_cb` returns 0 (no feature reports).
+- `tud_hid_get_report_cb` answers INPUT probes with a zeroed report of the right
+  length (gamepad 7, mouse/keyboard via the stock structs); other types return 0.
 - `tud_hid_set_report_cb` is a stub; keyboard LED output reports would land here.
 
 ---
