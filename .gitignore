@@ -43,3 +43,6 @@ package-lock.json
 # 3D printing
 models/gcode/
 *.gcode
+
+# Third-party reference downloads (kept local, not committed)
+Spherical flexure joint 1 and 2 (original files) - 4841850/

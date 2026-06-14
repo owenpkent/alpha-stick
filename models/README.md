@@ -67,6 +67,15 @@ Edit parameters at the top of `source/pod-v0.scad`, then:
 Part selector values: `hub`, `housing`, `base`, `carrier`, `topper`, `guide`,
 `plate` (all parts in print orientation), `section` (assembly cross-section).
 
+## Community / experimental parts
+
+Derived or third-party designs, kept separate from the core pod so their
+upstream licences stay clear.
+
+| Part | Source | What it is |
+|------|--------|------------|
+| Tetra II spherical flexure joint | [`community/tetra2-flexure/`](community/tetra2-flexure/) | Parametric OpenSCAD rebuild of Jelle Rommers' remote-centre spherical flexure (CC-BY). A bearing-free compliant gimbal candidate: 3 thin blades pivot about a point that floats ~50 mm out in front of the joint. |
+
 ## Layout
 
 ```
@@ -74,5 +83,5 @@ models/
 +-- source/    pod-v0.scad (parametric source of truth)
 +-- stl/       ready-to-print exports (regenerate after editing source)
 +-- step/      reserved for the production pod (FreeCAD/Fusion era)
-+-- community/ your toppers and bodies; include printed mass for toppers
++-- community/ derived / third-party parts (see table above); your toppers and bodies
 ```
