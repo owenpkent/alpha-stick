@@ -74,7 +74,7 @@ upstream licences stay clear.
 
 | Part | Source | What it is |
 |------|--------|------------|
-| Tetra II spherical flexure joint | [`community/tetra2-flexure/`](community/tetra2-flexure/) | Parametric OpenSCAD rebuild of Jelle Rommers' remote-centre spherical flexure (CC-BY). A bearing-free compliant gimbal candidate: 3 thin blades pivot about a point that floats ~50 mm out in front of the joint. |
+| Tetra II spherical flexure joint | [`community/tetra2-flexure/`](community/tetra2-flexure/) | Jelle Rommers' remote-centre spherical flexure, original `STEP` + `STL` (CC-BY). A bearing-free compliant gimbal candidate: nested tetrahedron blade flexures pivot about a point that floats ~50 mm out from the joint. See the folder README for the paper analysis. |
 
 ## Layout
 
