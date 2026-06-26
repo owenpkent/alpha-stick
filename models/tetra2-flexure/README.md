@@ -116,5 +116,7 @@ CERN-OHL-P licensing for original work. It is also recorded repo-wide in
 
 - **Modifications in this repo:** none — the files here are the author's original
   publication, used unmodified.
-- **Licence version:** the Thingiverse listing shows Creative Commons Attribution;
-  confirm the exact generation (e.g. CC BY 4.0) at the source before pinning it.
+- **Licence version:** the Thingiverse listing labels it "Creative Commons -
+  Attribution"; Thingiverse applies the **CC BY 3.0 Unported** generation for
+  this option ([deed](https://creativecommons.org/licenses/by/3.0/)). Standalone
+  text: [`LICENSE`](LICENSE) in this folder.

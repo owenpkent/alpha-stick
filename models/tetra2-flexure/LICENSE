@@ -1,0 +1,25 @@
+Tetra II spherical flexure joint — licence
+===========================================
+
+This part is third-party work, licensed separately from the rest of the
+Alpha Stick repository (whose code is MIT and whose original hardware is
+CERN-OHL-P v2).
+
+  Work:    "Spherical flexure joint 1 and 2 (original files)"
+  Author:  Jelle Rommers (Jelle_Rommers)
+  Source:  https://www.thingiverse.com/thing:4841850
+  Licence: Creative Commons Attribution (CC BY)
+           The Thingiverse listing labels this "Creative Commons -
+           Attribution"; Thingiverse applies the CC BY 3.0 Unported
+           generation for this option.
+           Deed / full text: https://creativecommons.org/licenses/by/3.0/
+
+  Files covered: Tetra2.STEP, Tetra2.STL, preview-*.png
+  Modifications: none — original author files, used unmodified.
+
+If you redistribute or adapt this part you must keep this attribution and,
+for adaptations, indicate that you changed it (and what you changed).
+
+References:
+  Paper: https://doi.org/10.1016/j.precisioneng.2021.03.002
+  Video: https://www.youtube.com/watch?v=DAngcygU7tc

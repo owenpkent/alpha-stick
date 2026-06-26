@@ -313,8 +313,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 ## License
 
 - **Code & firmware** — [MIT License](LICENSE).
-- **Original hardware designs** (the pod, bench rig, bodies, toppers) — **CERN-OHL-P v2** (permissive).
-- **Tetra II spherical flexure** (the primary pivot) — third-party design by Jelle Rommers under **Creative Commons Attribution (CC BY)**, used unmodified; credit is required if you share or build on it.
+- **Original hardware designs** (the pod, bench rig, bodies, toppers) — **CERN-OHL-P v2** (permissive), see [LICENSE-CERN-OHL-P-2.0.txt](LICENSE-CERN-OHL-P-2.0.txt).
+- **Tetra II spherical flexure** (the primary pivot) — third-party design by Jelle Rommers under **Creative Commons Attribution (CC BY 3.0)**, used unmodified; credit is required if you share or build on it. See [models/tetra2-flexure/LICENSE](models/tetra2-flexure/LICENSE).
 
 Bundled third-party components and their attribution are listed in [NOTICE.md](NOTICE.md).
 

@@ -223,8 +223,8 @@ in all project spaces.
 ## License
 
 By contributing your **original** work, you agree it will be licensed under:
-- **MIT License** — code and firmware
-- **CERN-OHL-P v2** — hardware designs
+- **MIT License** — code and firmware ([LICENSE](LICENSE))
+- **CERN-OHL-P v2** — hardware designs ([LICENSE-CERN-OHL-P-2.0.txt](LICENSE-CERN-OHL-P-2.0.txt))
 
 **Third-party parts are different.** The Tetra II flexure is bundled under
 Creative Commons Attribution (CC BY) — see [NOTICE.md](NOTICE.md). If your
