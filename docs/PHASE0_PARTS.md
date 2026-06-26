@@ -7,6 +7,12 @@ One order, roughly **$100-150** total, less if you already own the tools.
 Where exact SKUs are given they are high-confidence; otherwise the Search term column is the
 reliable way to find the part. Prices are mid-2026 ballpark.
 
+> **Mechanism note:** the magnets, washers, ball, and PTFE below build the **ball-in-PTFE bench
+> rig**, which characterises the dual-Hall sensing independent of the pivot. To bench the
+> **primary pivot**, also print the Tetra II flexure from
+> [`models/tetra2-flexure/`](../models/tetra2-flexure/) (PLA/PETG, no extra purchases) and measure
+> its force on the gram gauge.
+
 ---
 
 ## 1. Electronics Bench

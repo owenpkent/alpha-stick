@@ -2,9 +2,10 @@
 
 How to configure Alpha Stick **V2**: calibration, modes, sensitivity, filtering, and profiles.
 
-One setting lives in hardware, not software: the **force adjuster** under the pod sets how
-hard the stick is to move (1-8 gf), by turning the carrier between detents. Everything else
-is firmware and lives in profiles.
+With the primary **Tetra II flexure** pivot, full-deflection force is fixed by the printed part,
+not a software setting — to change how hard the stick is to move you swap in a stiffer or softer
+flexure. (The alternative ball-pivot pod adds a hardware **force adjuster**: turn the carrier
+between detents to set 1-8 gf.) Everything else here is firmware and lives in profiles.
 
 ---
 
@@ -271,11 +272,11 @@ path for buttons; analog passthrough is not assumed. For PC play, use Alpha Stic
 |-------|----------|
 | Can't find `AlphaStick` WiFi | Re-enter config mode (B1+B2 at plug-in); LED should blink |
 | Live view clips before the rim | Re-run calibration sweep |
-| Center drifts on a tilted mount | Run mount tare at the installed angle; consider a stiffer force detent |
+| Center drifts on a tilted mount | Run mount tare at the installed angle; consider a stiffer-blade flexure (or a stiffer force detent on the alternative pod) |
 | Pointer too twitchy in mouse mode | Lower `max_px_s` before adding filtering |
 | Dwell clicks fire accidentally | Increase radius_pct or ms; or disable and use Z-press |
 | Settings reset on reboot | Save before restart; check NVS not full (delete unused profiles) |
-| Stick feels too heavy/light | That is the hardware force adjuster, not software: turn the carrier |
+| Stick feels too heavy/light | The flexure sets this in hardware — fit a stiffer/softer flexure (or, on the alternative pod, turn the force-adjuster carrier) |
 
 ---
 

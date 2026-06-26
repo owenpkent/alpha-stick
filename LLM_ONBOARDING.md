@@ -59,9 +59,10 @@ I'm Owen — a wheelchair user with muscular dystrophy.
 - **3D Modeling:** FreeCAD or Fusion360
 - **PCB Design:** KiCad or EasyEDA
 
-**V2 design baseline:** `docs/DESIGN_V2.md` is the source of truth (contactless dual-Hall
-sensing, magnetic centering 1-8 gf, <5 gf force target, sensor pod architecture). HARDWARE.md
-and FIRMWARE.md match it. ISOMETRIC_PARTS.md is archived.
+**V2 design baseline:** `docs/DESIGN_V2.md` is the source of truth (Tetra II spherical flexure
+pivot with built-in elastic self-centering, contactless dual-Hall sensing, <5 gf force target,
+sensor pod architecture). The ball-in-PTFE pod with a magnetic force adjuster is the documented
+alternative/fallback. HARDWARE.md and FIRMWARE.md match it. ISOMETRIC_PARTS.md is archived.
 
 ---
 
@@ -104,8 +105,8 @@ chore: maintenance tasks
 | Component | Recommended Part | Purpose |
 |-----------|-----------------|---------|
 | MCU | ESP32-S3-MINI-1 (DevKitC for bench) | Main controller |
+| Pivot + centering | Tetra II spherical flexure ([`models/tetra2-flexure/`](models/tetra2-flexure/)) | Bearing-free joint + elastic self-centering; force set by blade geometry |
 | Position sensing | 2x TMAG5273 3D Hall + N52 diametric magnet | Contactless, <5 gf stick |
-| Centering | Ring magnet on threaded carrier | Adjustable 1-8 gf return force |
 | Buttons | 6mm tactile | Direct input |
 | Jacks | PJ-320A 3.5mm | External switches |
 | Case | 3D printed PLA/PETG | Enclosure + sensor pod bodies |

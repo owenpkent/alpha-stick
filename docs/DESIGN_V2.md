@@ -8,7 +8,7 @@ Status: **Design baseline, June 2026.** Supersedes the joystick-selection sectio
 
 ## 0. Thesis
 
-Build one ultra-light input core (a contactless, magnetically centered stick requiring under
+Build one ultra-light input core (a contactless stick on a compliant flexure pivot requiring under
 5 grams of force and about 2 mm of travel) and let firmware decide what it is: a USB/BLE gamepad,
 a precision mouse, a keyboard, or a drive-input node for ATOS. The expensive part of every
 adaptive controller is the input mechanism. Solve that once, at the physics level, and the rest
@@ -19,9 +19,9 @@ is software.
 | Decision | Choice | Why | Alternative kept |
 |---|---|---|---|
 | Sensing | Dual TMAG5273 3D Hall, one tilting magnet | Contactless (zero added force), redundancy for drive use, ~$2 | MLX90393 if bench noise is too high |
-| Return force | Passive magnetic centering, mechanically adjustable 1-8 gf | Frictionless restoring force, no spring wear, no creep | Active coils (Stage C) |
-| Pivot | Steel ball in PTFE cup, magnet preload | <0.2 gf friction equivalent, printable, $1 | Jewel bearing if stiction measurable |
-| Throw | +/-4 to 6 degrees (~+/-2-3 mm at fingertip) | Proprioceptive feedback without fatigue | Firmware near-isometric mode (stiff magnet setting) |
+| Return force | Elastic return built into the Tetra II flexure (no spring, no centering magnet) | The restoring force *is* the pivot; zero sliding friction, zero backlash | Active coils (Stage C); ball + magnet centering (alternative) |
+| Pivot | Tetra II spherical flexure, printed one piece | No bearings, no sliding surfaces, no break-away friction; remote centre ~50 mm out | Ball in PTFE cup + magnet preload if printed-flexure creep/fatigue loses on the bench |
+| Throw | +/-4 to 6 degrees (~+/-2-3 mm at fingertip) | Proprioceptive feedback without fatigue; well within the flexure's range | Stiffer-blade flexure or firmware near-isometric mode |
 | Isometric load cells | **Dropped** | Sustained force is fatiguing; strain gauges drift; 4 cells + 2 ADCs + mux for worse UX | Docs archived |
 | MCU | ESP32-S3 (MINI-1 module) | Native USB OTG + BLE + WiFi, same target as ATOS | ESP32-C3 cannot do USB HID composite well |
 | Framework | ESP-IDF 5.x + TinyUSB + NimBLE | Composite HID, OTA rollback, ESP-NOW, shares toolchain with ATOS/espp | Arduino fine for quick sensor spikes |
@@ -36,9 +36,9 @@ is software.
 
 | # | Requirement | Target | Notes |
 |---|---|---|---|
-| R1 | Full-deflection force | <5 gf, nominal 3 gf, adjustable 1-8 gf | Measured at 40 mm reference grip point |
+| R1 | Full-deflection force | <5 gf, nominal ~3 gf target; set by flexure blade geometry/scale, **measured** on the bench (not per-session adjustable) | Measured at 40 mm reference grip point |
 | R2 | Throw | +/-4 to 6 deg mechanical (+/-2.8 to 4.2 mm at 40 mm) | "Super low throw" |
-| R3 | Breakout (force to first motion) | <0.5 gf | Friction budget, section 3 |
+| R3 | Breakout (force to first motion) | <0.5 gf (~0 with the flexure: no sliding surface to break away) | Friction budget, section 3 |
 | R4 | Sensing | Contactless (Hall effect) | No pots, no strain gauges in the force path |
 | R5 | MCU | ESP32-S3 | USB HID + BLE HID + WiFi config/OTA |
 | R6 | Modes | Gamepad, mouse, keyboard, ATOS input | Runtime switchable |
@@ -80,7 +80,7 @@ center). The architecture is wrong for the force target, not just the spring.
 **The synthesis:** a *small-displacement* stick (2-3 mm) at *near-zero force* (3 gf) gives the
 minimal range-of-motion benefit that motivated the isometric design, plus real proprioceptive
 feedback, plus rest-at-position, with one contactless sensor. Users who want a stiffer, almost
-isometric feel turn the force adjuster up; the throw is small enough that 8 gf feels nearly rigid.
+isometric feel fit a stiffer-blade flexure; the throw is small enough that ~8 gf feels nearly rigid.
 
 ---
 
@@ -90,8 +90,8 @@ Force at the 40 mm grip point, full deflection:
 
 | Source | Budget | How |
 |---|---|---|
-| Magnetic centering (the intended force) | 1.0-8.0 gf, nominal 3.0 | Adjustable magnet gap, section 5 |
-| Pivot friction | <0.2 gf | PTFE-on-steel ball, ~30 gf preload, 2 mm ball radius: friction torque is roughly mu * N * r = 0.075 * 30 gf * 2 mm = 4.5 gf-mm, i.e. ~0.11 gf at 40 mm |
+| Flexure restoring force (the intended force) | nominal ~3.0 gf, fixed by the part | The flexure blades bend elastically; force is set by blade geometry/material/scale and measured on the bench (section 5) |
+| Pivot friction | ~0 gf | The flexure has no sliding surfaces, so no break-away friction and no stiction |
 | Seal/boot | 0 (default) | Labyrinth gap, no contacting seal. Optional silicone boot costs 0.5-1 gf, off by default |
 | Sensor | 0 | Contactless |
 | Gravity bias (tilted mounts) | up to ~1.3 gf equivalent | See below; handled by mass budget + firmware tare |
@@ -105,8 +105,9 @@ grip point, nearly half the nominal centering force. Therefore:
   hollow printed toppers, one small magnet.
 - Firmware applies a **mount-orientation tare** (stored per profile) so the gravity bias reads
   as zero offset.
-- Tilted-mount profiles default to a higher centering force (4-6 gf) so the stick still returns
-  to center against gravity.
+- Tilted mounts (chin boom, vertical surface) use a stiffer-blade flexure so the stick still
+  returns to center against gravity. The flexure's moving platform adds to the moving mass, so
+  re-derive this budget against the measured part rather than the ball-pivot table above.
 
 This is also why the topper system is magnetic quick-swap with a <1 g mass budget per topper.
 
@@ -121,18 +122,17 @@ This is also why the topper system is magnetic quick-swap with a <1 g mass budge
                   |
                   |   stick: carbon tube, 25/40/60 mm options
                   |
-            +-----o-----+      pivot: 4 mm steel ball in PTFE cup
-            |   ball    |      (magnet preload seats the ball, ~30 gf)
-            +-----+-----+
-                  |
-             [N52 D4x2]        diametric disc magnet, rigid with stick,
-                  |            tilts 1:1 with stick angle
+              [ P ]            remote rotation centre, ~50 mm out
+                  :
+        ##########:##########   Tetra II spherical flexure (printed one piece):
+        ##  nested blade   ##   3-DOF rotation about P, no sliding surfaces,
+        #####moving########      elastic return to centre built in
+             [N52 D4x2]          diametric disc magnet on the moving platform,
+                  |              tilts 1:1 with stick angle
          . . . . gap ~1.5 mm . . . .
        =============================    sensor pod PCB (~20 x 20 mm)
         [TMAG5273 A]   [TMAG5273 B]     dual 3D Hall, I2C, ~3 mm apart
-       =============================
-              (ring magnet on            centering + preload,
-               threaded carrier)         turn to set 1-8 gf
+       =============================    flexure base mounts here
 ```
 
 ### Why field *direction*, not magnitude
@@ -145,14 +145,16 @@ Computing tilt from the field direction (after a one-time calibration map) and n
 - Axial gap creep in printed parts (magnitude changes, direction does not)
 - Magnet strength tolerance between builds
 
-All ferromagnetic parts (preload washer, ball) move rigidly with the magnet, so they distort the
-field constantly in the stick frame and the calibration map absorbs them.
+The only ferromagnetic part is the sense magnet itself (the flexure is all-polymer), so there is
+little to distort the field, and the calibration map absorbs whatever static asymmetry the build has.
 
-### The Z axis is free
+### The Z axis (press-to-click)
 
-Pressing the stick down compresses the ball into its seat and closes the magnet-sensor gap;
-|B| jumps. That is a **press-to-click at the same <5 gf**, with firmware hysteresis and debounce,
-no mechanical switch in the force path. Lift-off is detectable the same way.
+A spherical flexure constrains the three translations, so axial press is *stiff* — unlike the ball
+pod, pressing does not freely close the magnet-sensor gap. Z press-to-click is therefore a
+follow-up on the flexure: either a deliberately compliant axial element under the pod (a soft
+mount that lets |B| dip a little under press, read with hysteresis + debounce, no switch in the
+force path) or a jack/topper switch. The ball-pivot alternative keeps the free gap-change Z-click.
 
 ### Dual sensors: cheap redundancy
 
@@ -194,32 +196,42 @@ HID reports are 16-bit with dithered scaling either way.
 | Option | Friction | Wear | Printable | Verdict |
 |---|---|---|---|---|
 | 2-axis gimbal | 4 sliding contacts | yes | hard | No: friction dominates at 3 gf |
-| Flexure (TPU/spring steel) | zero | creep/fatigue | yes | No as primary: flexure stiffness *is* a spring and printed polymer creep moves center over weeks |
-| Ball in PTFE cup + magnetic preload | ~0.1-0.2 gf equiv | low (PTFE) | yes | **Chosen** |
-| Jewel/pivot bearing | near zero | low | no ($) | Fallback if PTFE stiction is measurable on the bench |
+| **Tetra II spherical flexure** | zero (no sliding) | creep/fatigue (polymer) | yes, one piece | **Chosen.** No break-away friction, no backlash, self-centering; creep/fatigue is the accepted risk, bounded by material (PETG/metal) and the ball-pivot fallback |
+| Ball in PTFE cup + magnetic preload | ~0.1-0.2 gf equiv | low (PTFE) | yes | Alternative / fallback; also characterises the sensing on the bench independent of the pivot |
+| Jewel/pivot bearing | near zero | low | no ($) | Fallback if both printed paths disappoint |
 
-### Magnetic centering and the force adjuster
+The flexure was the rejected option in the V1-era version of this study — printed-polymer creep
+moving centre over weeks is a real failure mode. It is promoted to primary now because its
+bench-validatable upside (literally zero break-away friction, the first gram of input already
+moves it, plus self-centering with no extra parts) is exactly the ultra-low-force thesis, and the
+creep/fatigue risk is bounded: PETG over PLA, a printed-then-cast/metal path, and the ball-pivot
+pod kept as a drop-in fallback if the bench says creep wins.
 
-A ferrous washer (or second magnet) fixed to the stick bottom is attracted toward a ring magnet
-mounted in a **threaded carrier** below the sensor pod. On-axis, attraction is purely axial
-(preload that seats the ball). Tilted, the attraction is off-axis and produces a restoring
-torque. Required torque is tiny: 3 gf at 40 mm = 120 gf-mm = ~1.2 mN-m, easily within reach of
-small N52 rings at 1-4 mm gaps.
+### Centering and force: the flexure does both
 
-Turning the carrier changes the gap, which changes both centering force and preload together
-(they conveniently scale in the same direction). Target range: **1-8 gf full-deflection force**
-across ~3 turns of an M12x0.75 printed thread, with detents every quarter turn. This is the
-single most important user-facing mechanical feature: force tuning without tools, per session,
-as strength varies day to day.
+The Tetra II flexure's blades bend elastically, so the joint *is* the return-to-centre spring —
+no centering magnet, no ferrous washer, no threaded carrier. Required restoring torque is tiny
+(3 gf at 40 mm = 120 gf-mm = ~1.2 mN-m), and the flexure delivers it with zero sliding friction
+and zero backlash.
+
+Force is therefore a property of the printed part, not a user dial. It is set by blade thickness,
+the nested-element geometry, material modulus, and overall scale — and the paper's closed-form
+stiffness matches the real tetrahedron element only qualitatively (NMAE ~35%), so **measure it on
+the bench** (Phase 0) rather than trusting a calculation. To retune feel, print a flexure with
+different blade thickness or a scaled STEP (scaling moves P and stiffens the blades non-linearly —
+re-measure). Per-session, tool-free force adjustment is the one thing given up versus the
+magnetic-carrier design: it returns as the Stage C active-coil feature below, and the ball-pivot
+alternative keeps the threaded adjuster for builds that need it.
 
 ### On magnetic levitation (asked and answered)
 
 Earnshaw's theorem rules out stable levitation with static permanent magnets alone; every
 "floating" stick needs either a mechanical constraint or active control. So:
 
-- **Now (Stage A):** *constrained passive magnetics*: the ball carries the constraint, magnets
-  carry all the force. Zero springs, zero sliding friction in the force path, zero wear parts
-  except a PTFE cup. This captures ~90% of what maglev promises at ~0% of the complexity.
+- **Now (Stage A):** *constrained passive compliance*: the flexure carries both the constraint
+  and the restoring force, with no sliding surfaces and no centering magnet. Zero break-away
+  friction, zero backlash; the wear mode is polymer creep/fatigue, bounded by material choice.
+  This captures ~90% of what maglev promises at ~0% of the complexity.
 - **Later (Stage C, "Field"):** *active magnetics*: four planar coils in the sensor-pod PCB
   layers push on the stick magnet, closed-loop at 1 kHz from the Hall sensors. That unlocks
   firmware-programmable centering force (0 to ~10 gf), virtual detents and walls, haptic ticks,
@@ -233,8 +245,8 @@ bet; Stages A and B do not depend on it.
 
 ### The sensor pod: one core, many bodies
 
-Everything input-critical lives in a self-contained **pod**: pivot + magnet + dual Hall + force
-adjuster on a ~20 x 20 mm satellite PCB, connected to the main board by a 6-pin JST-SH/FFC
+Everything input-critical lives in a self-contained **pod**: flexure pivot + magnet + dual Hall
+on a ~20 x 20 mm satellite PCB, connected to the main board by a 6-pin JST-SH/FFC
 (3V3, GND, SDA, SCL, INT_A, INT_B). The pod mounts in:
 
 - **Desktop base** (default): main PCB, jacks, USB-C, battery
@@ -249,8 +261,9 @@ One calibration procedure, one firmware, four form factors.
 - Toppers: magnetic quick-swap, <1 g each: 8 mm ball, 14 mm dish, lip bar, T-bar,
   20/40 mm extensions, mouthpiece adapter
 - Base: AMPS hole pattern + 1/4-20 brass insert (RAM mounts, Magic Arms, wheelchair trays)
-- Printed in PLA/PETG; pivot cup in PTFE (machined washer-stock insert) or printed PCTG
-  with PTFE tape as the budget path
+- Printed in PLA/PETG; the flexure prints as one piece (PETG preferred over PLA for creep and
+  fatigue life). The ball-pivot alternative uses a PTFE cup (machined insert or printed PCTG +
+  PTFE tape)
 
 ---
 
@@ -263,7 +276,7 @@ One calibration procedure, one firmware, four form factors.
    sensor pod          |              main board              |
   +-------------+      |                                      |
   | TMAG5273 x2 |--I2C-|  ESP32-S3-MINI-1                     |
-  | magnet/ball |      |   |- USB OTG --- USB-C ---> PC/XAC   |
+  | magnet+flex |      |   |- USB OTG --- USB-C ---> PC/XAC   |
   +-------------+      |   |- BLE HID ------------> wireless  |
                        |   |- ESP-NOW ----> dongle / ATOS S3  |
   4x 3.5mm jacks ------|   |- UART (AS-Link) -----> ATOS S3   |
@@ -316,14 +329,14 @@ but switching currents near the Hall sensors do not.
 |---|---|
 | ESP32-S3-MINI-1-N8 | $3.50 |
 | 2x TMAG5273 | $1.60 |
-| Magnets (sense + ring + toppers) | $2.50 |
+| Magnets (sense + toppers; no ring) | $2.00 |
 | USB-C + ESD + regulator + passives | $2.50 |
 | 4x 3.5 mm jacks | $1.60 |
 | Buttons, LEDs, misc | $1.50 |
 | PCBs (main + pod, JLC) | $4.00 |
-| Ball, PTFE, fasteners | $2.00 |
-| Printed parts | $3.00 |
-| **Core total** | **~$22** |
+| Brass/nylon fasteners (flexure is printed) | $0.50 |
+| Printed parts (incl. Tetra II flexure) | $3.50 |
+| **Core total** | **~$20** |
 | Battery option (LiPo + BQ24074 + MAX17048) | +$13 |
 | Sip/puff option | +$10 |
 | Haptic option | +$4 |
@@ -486,16 +499,16 @@ E-stop remains an ATOS-side physical input; AS-Link carries no stop authority, o
 
 ### Stage A: "Glide" (the core product)
 
-Passive pod (magnet centering + ball pivot + dual Hall), desktop base, USB composite
+Passive pod (Tetra II flexure pivot + dual Hall sensing), desktop base, USB composite
 gamepad/mouse/keyboard, BLE HID, web config, profiles, OTA.
 
 **Exit criteria (bench-measured, not vibes):**
-- Full-deflection force tunable 1-8 gf; nominal profile 3 +/-0.5 gf at 40 mm (pull gauge)
-- Breakout <0.5 gf; release returns within 0.5% FS of center
+- Flexure full-deflection force measured at 40 mm (pull gauge); a printed flexure landing near the ~3 gf nominal target, with a stiffer-blade variant on hand for tilted mounts
+- Breakout <0.5 gf (expected ~0); release returns within 0.5% FS of center
 - Stationary noise <0.5% FS p-p after pipeline; >=8 effective bits demonstrated
 - Wired stimulus-to-report latency <5 ms (logic analyzer)
 - Center drift <1% FS over 2 h, 15-35 degC
-- 100k-cycle deflection rig with no measurable force/center change
+- 100k-cycle deflection + soak rig: bound flexure creep/fatigue — force and centre drift stay within spec, or change material/scale (PETG/metal) until they do
 - Owen daily-drives it for gaming and desktop mousing (the real test)
 
 ### Stage B: "Bridge" (the ecosystem release)
@@ -517,9 +530,9 @@ damping. Wired/docked feature first; falls back cleanly to Stage A passive behav
 | Risk | Mitigation |
 |---|---|
 | Hall SNR below 8 effective bits at +/-5 deg | First Phase 0 bench item; MLX90393 fallback footprint on pod v0 |
-| PTFE stiction perceivable at <1 gf | Measure breakout explicitly; jewel-bearing fallback |
-| Printed-thread force adjuster too coarse/sloppy | Quarter-turn detents; metal insert fallback |
-| Magnetic centering field couples into sensing magnet | Geometry keeps ring coaxial (symmetric at center); calibration absorbs static asymmetry; verify on bench |
+| Printed-flexure creep/fatigue moves centre or changes force over weeks | The accepted primary risk: 100k-cycle + soak bench tests; PETG over PLA, then printed-then-cast/metal; ball-pivot pod is the drop-in fallback |
+| Flexure force not predictable from the paper (NMAE ~35%) and not per-session adjustable | Measure on the bench, iterate blade thickness/scale; per-session tuning deferred to Stage C coils; ball-pivot adjuster as alternative |
+| Flexure remote centre (~50 mm) and envelope (~111 x 103 x 45 mm) are large for a handheld stick | Scale the STEP down (re-measure force; scaling moves P non-linearly); mount the stick so its natural pivot sits at P |
 | S3 BLE power too high for 10 h on 500 mAh | Measure; modem sleep tuning; bigger cell fits the bay |
 | XAC rejects generic HID stick | Test early (Phase 0); fallback is XAC 3.5 mm for buttons + USB on PC only |
 | ATOS ABI lacks input-stream service | Filed as proposed `ATOS_CAP_READ_INPUT_STREAM`; gateway can prototype against a host stub |

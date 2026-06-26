@@ -14,14 +14,14 @@ First-principles redesign baseline: see [docs/DESIGN_V2.md](docs/DESIGN_V2.md). 
 ### Sensing Bench
 - [ ] **Breadboard dual TMAG5273 + tilting magnet** and measure field swing, noise, effective bits at 1 kHz
 - [ ] **Decide TMAG5273 vs MLX90393** from bench data (need >=8 effective bits/axis)
-- [ ] **Verify Z-press detection** (gap change) with clean hysteresis at <5 gf
+- [ ] **Verify Z-press detection** with clean hysteresis at <5 gf (free gap-change on the ball pod; on the flexure, axial is stiff — Z-click via a compliant mount or a switch is a follow-up)
 
 ### Mechanics Bench
 - [x] **Model pod v0 printables** — parametric OpenSCAD source + STLs ([models/](models/))
-- [ ] **Prototype magnetic centering + threaded force adjuster**, confirm 1-8 gf range with gram gauge
-- [ ] **Measure ball-in-PTFE pivot breakout force** (<0.5 gf target) and return-to-center repeatability
-- [ ] **Print sensor pod v0** (pivot + magnet + pod PCB outline + adjuster carrier)
-- [ ] **Weigh moving assembly** against the 2.5 g budget
+- [ ] **Print the Tetra II flexure** ([models/tetra2-flexure/](models/tetra2-flexure/)) and **measure its full-deflection force** on the gram gauge (PLA first, then PETG); iterate blade thickness/scale toward the ~3 gf nominal — this is the **primary** pivot
+- [ ] **Measure flexure breakout** (expect ~0, no sliding) and return-to-center repeatability; start a **creep/fatigue soak** (the primary risk)
+- [ ] **Weigh the flexure moving assembly** (platform + inner blades + stick + magnet) and re-derive the gravity-bias budget
+- [ ] *Alternative pod:* prototype magnetic centering + threaded force adjuster (confirm 1-8 gf), measure ball-in-PTFE breakout (<0.5 gf), print sensor pod v0 — the fallback if flexure creep wins
 
 ### Firmware Spikes
 - [ ] **ESP-IDF TinyUSB composite spike** (gamepad + mouse + CDC) at 1 kHz on S3 devkit; verify DUAL-mode dual-report streaming and cross-task `tud_` call safety under sustained load

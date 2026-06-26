@@ -6,6 +6,12 @@ Step-by-step instructions for assembling Alpha Stick **V2** (sensor pod + main b
 > Steps and dimensions here match [DESIGN_V2.md](DESIGN_V2.md) and [HARDWARE.md](HARDWARE.md)
 > and will be finalized with photos once the first pod articles are built.
 
+> **Primary mechanism note:** this guide builds the **ball-in-PTFE-cup pod** — the alternative
+> mechanism. The primary pivot is now the **Tetra II spherical flexure**: print it from
+> [`models/tetra2-flexure/`](../models/tetra2-flexure/) and mount the stick + sense magnet to its
+> moving platform (no ball, PTFE cup, ring magnet, washer, or force-adjuster carrier). The
+> electronics, calibration, and main-board assembly below are identical for both pivots.
+
 ---
 
 ## Before You Begin

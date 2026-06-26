@@ -5,6 +5,15 @@
     A 3D-printable, ESP32-powered joystick designed for gamers with limited mobility.<br/>
     Inspired by commercial solutions like QuadStick and Feather — but fully open and hackable.
   </p>
+  <p>
+    <img src="models/tetra2-flexure/preview-iso.png" alt="Tetra II spherical flexure joint — the primary pivot mechanism" width="440"/>
+  </p>
+  <p><em>The pivot is a <strong>Tetra II spherical flexure</strong>: bearing-free, frictionless, and self-centering — the first gram of input already moves it.</em></p>
+  <p>
+    <img src="models/tetra2-flexure/preview-front.png" alt="Tetra II flexure — front view" width="240"/>
+    &nbsp;
+    <img src="models/tetra2-flexure/preview-side.png" alt="Tetra II flexure — side view" width="240"/>
+  </p>
 </div>
 
 ---
@@ -17,9 +26,10 @@
 
 | Area | Status |
 |------|--------|
+| Pivot mechanism | ✅ **Tetra II spherical flexure (primary)** — CAD in [`models/tetra2-flexure/`](models/tetra2-flexure/); ball-in-PTFE pod kept as the alternative |
 | V2 First-Principles Design | 🔄 Baseline written: [docs/DESIGN_V2.md](docs/DESIGN_V2.md) |
-| Hardware Design | ⏳ Planning |
-| 3D Print Files | ⏳ Planning |
+| Hardware Design | ⏳ Planning (flexure pod + main board) |
+| 3D Print Files | 🔄 Flexure STEP/STL in repo; pod bodies in progress |
 | Firmware | ⏳ Planning |
 | Documentation | 🔄 In Progress |
 | Project Nimbus Integration | ⏳ Planned |
@@ -58,8 +68,9 @@ Alpha Stick draws from the best features of existing adaptive controllers:
 
 ### Hardware
 - **ESP32-S3** microcontroller with Bluetooth LE and USB HID
-- **Hall-effect or analog joystick** — configurable sensitivity
-- **Ultra-low force option** — magnetic sensing for minimal movement requirements
+- **Tetra II spherical flexure pivot** — bearing-free, frictionless, self-centering; no springs, no break-away force
+- **Contactless dual-Hall sensing** — a tilting magnet read by two TMAG5273 sensors; immune to temperature and creep
+- **Ultra-low force** — under 5 grams full deflection, set by the flexure's blade geometry
 - **3.5mm input jacks** — connect external switches and buttons
 - **Modular enclosure** — 3D-printed, designed for different mounting options
 - **Sip/puff interface** (optional) — pressure sensor input
@@ -120,7 +131,8 @@ alpha-stick/
 │   ├── web/                  # Web config UI source
 │   └── sdkconfig.defaults    # ESP-IDF configuration
 ├── models/
-│   ├── stl/                  # Ready-to-print STL files
+│   ├── tetra2-flexure/       # Primary pivot: Tetra II flexure STEP + STL (CC-BY)
+│   ├── stl/                  # Ready-to-print STL files (alternative pod)
 │   ├── step/                 # STEP files for modification
 │   └── source/               # FreeCAD/Fusion360 source files
 ├── software/
@@ -139,7 +151,7 @@ alpha-stick/
 | Component | Purpose | Est. Cost |
 |-----------|---------|-----------|
 | ESP32-S3 module | Main controller | $4–10 |
-| Sensor pod (dual Hall + magnets + pivot) | Position input, <5 g force | $6–8 |
+| Sensor pod (Tetra II flexure pivot + dual Hall + magnet) | Position input, <5 g force, self-centering | $5–7 |
 | 3.5mm jacks (x4) | External switch inputs | $2 |
 | Buttons (x2–4) | Direct button inputs | $1–2 |
 | 3D-printed enclosure | Housing | $2–5 (filament) |
@@ -210,7 +222,7 @@ Alpha Stick is designed to work seamlessly with [**Project Nimbus**](https://git
 
 Designed with input from the disability gaming community:
 
-- **Adjustable force sensitivity** — From standard to ultra-light (<10g)
+- **Ultra-light force** — under 5 g full deflection from the flexure; swap to a stiffer-blade flexure (or the adjustable ball-pivot pod) to retune
 - **Configurable deadzone** — Accommodate tremors and limited precision
 - **Tremor filtering** — Smooth out unintended movements
 - **Button debouncing** — Adjustable for different switch types

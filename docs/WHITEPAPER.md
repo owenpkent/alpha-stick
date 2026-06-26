@@ -4,6 +4,13 @@
 
 Firmware MIT, hardware CERN-OHL-P v2. Repository: github.com/owenpkent/alpha-stick
 
+> **Mechanism update (June 2026):** the primary pivot is now the **Tetra II spherical flexure**
+> — bearing-free, frictionless, and self-centering (see [DESIGN_V2.md](DESIGN_V2.md) section 5 and
+> [`models/tetra2-flexure/`](../models/tetra2-flexure/)). The ball-in-PTFE pivot and the magnetic
+> "force is a dial" adjuster described in the sections below are retained as the documented
+> alternative/fallback; the contactless dual-Hall sensing, electronics, and force/latency targets
+> are unchanged.
+
 ---
 
 ## Abstract

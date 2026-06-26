@@ -4,6 +4,12 @@ Printed parts for Alpha Stick **V2**: the sensor pod mechanism, the bodies it dr
 toppers. Geometry is being finalized through Phase 0 bench work ([TODO.md](../TODO.md));
 settings below are the targets the parts are designed around.
 
+> **Primary pivot — the Tetra II flexure** prints as one piece from
+> [`models/tetra2-flexure/`](../models/tetra2-flexure/Tetra2.STL): PLA works for a demonstrator,
+> but **prefer PETG** for creep and fatigue life; ~0.7 mm blade walls (two slightly overlapping
+> perimeters on a 0.4 mm nozzle); the Tetra2 mesh prints without supports. The pod-mechanism
+> settings below are for the **alternative** ball-in-PTFE pod (housing, carrier, hub).
+
 ---
 
 ## Overview

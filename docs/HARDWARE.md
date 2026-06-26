@@ -10,13 +10,19 @@ approach is archived in [ISOMETRIC_PARTS.md](ISOMETRIC_PARTS.md).
 
 Two boards, one cable:
 
-- **Sensor pod (~20 x 20 mm):** the entire input mechanism. Ball pivot, tilting magnet,
-  dual 3D Hall sensors, magnetic centering with a threaded force adjuster (1-8 gf).
+- **Sensor pod (~20 x 20 mm PCB + flexure joint):** the entire input mechanism. The stick
+  pivots on a **Tetra II spherical flexure** (compliant, bearing-free, self-centering — no
+  pivot ball, no centering magnet, no force adjuster); a tilting diametric magnet on the
+  flexure's moving platform is read by dual 3D Hall sensors.
 - **Main board:** ESP32-S3, USB-C, 4x 3.5 mm switch jacks, options (battery, sip/puff,
   haptics), connected to the pod by a 6-pin cable.
 
 The split matters: the pod drops into different bodies (desktop base, chin boom, mouth-stick
 frame, thumb puck) without electronics changes.
+
+The **ball-in-PTFE-cup pod with magnetic centering** is retained as the
+[alternative mechanism](#alternative-mechanism-ball-in-ptfe-pod) (the original V2 path) and as
+the bench rig that characterises the sensing independent of the pivot choice.
 
 ```
                       +---------------------------------------+
@@ -38,6 +44,8 @@ frame, thumb puck) without electronics changes.
 
 ## Sensor Pod
 
+![Tetra II flexure joint — isometric, front, side](../models/tetra2-flexure/preview-iso.png)
+
 ### Mechanism
 
 ```
@@ -45,41 +53,51 @@ frame, thumb puck) without electronics changes.
                   |
                   |   stick: carbon tube, 25/40/60 mm options
                   |
-            +-----o-----+      pivot: 4 mm ball in PTFE cup
-            |   ball    |      (magnet preload seats it, ~30 gf)
-            +-----+-----+
-                  |
-          [steel washer]       centering armature, rigid with stick
-             [N52 D4x2]        diametric sense magnet, tilts 1:1 with stick
+              [ P ]            remote rotation centre, ~50 mm out (set by flexure)
+                  :
+        ##########:##########   Tetra II spherical flexure (printed, one piece):
+        ##  nested blade   ##   nested tetrahedron blade flexures, 3-DOF rotation
+        ##  flexures       ##   about P, no sliding surfaces, elastic return to centre
+        #####moving########      moving platform tilts 1:1 with the stick
+            [N52 D4x2]           diametric sense magnet, rigid with the platform
                   |
          . . . . gap ~1.5 mm . . . .
        =============================    pod PCB
         [TMAG5273 A]   [TMAG5273 B]     dual 3D Hall, I2C
-       =============================
-              (ring magnet on            centering force + ball preload,
-               threaded carrier)         turn to set 1-8 gf
+       =============================    fixed (flexure base mounts to it)
 ```
 
-How it works, in one paragraph: the magnet tilts with the stick, so the field *direction* at
-the sensors rotates 1:1 with stick angle (direction, not magnitude, so temperature and gap
-creep calibrate out). The ring magnet below attracts the steel washer on the stick: on-axis
-that attraction is pure preload seating the ball; tilted, it is a restoring torque. Turning
-the carrier changes the gap, which scales centering force and preload together.
+How it works, in one paragraph: the stick mounts to the flexure's moving platform and pivots
+about the flexure's remote centre **P**. The blade flexures bend elastically, so they *are* the
+pivot and the return-to-centre spring at once — there is no ball, no PTFE cup, no centering
+magnet, and no force adjuster, and because nothing slides there is no break-away friction (the
+first gram of input already moves it). The sense magnet rides the moving platform, so the field
+*direction* at the sensors rotates 1:1 with stick angle (direction, not magnitude, so
+temperature and gap creep calibrate out) — sensing is unchanged from the ball-pivot pod.
+
+**Force is set by the flexure, not a dial.** Full-deflection force is fixed by blade geometry,
+material, and scale, not adjusted with a thread. The paper's closed-form stiffness matches FEA
+only qualitatively for the real tetrahedron element (NMAE ~35%), so treat any calculated figure
+as a starting point and **measure force on the bench** (Phase 0). To retune, swap in a flexure
+with different blade thickness or a scaled STEP (re-measure after any scale change — scaling
+moves P and stiffens the blades non-linearly). Programmable force returns later via the Stage C
+active-coil path (DESIGN_V2 section 5), not via the mechanism here.
 
 ### Pod parts
 
 | Qty | Part | Spec | Notes | Est. |
 |-----|------|------|-------|------|
 | 2 | TMAG5273A1 | 3-axis Hall, I2C, +/-40/80 mT | Two different factory I2C address variants (trailing letter of the orderable part number sets the default address; pick two distinct ones per the TI datasheet) | $1.60 |
-| 1 | Sense magnet | N52 disc, D4 x 2 mm, **diametric** | Diametric is load-bearing: axial will not work | $0.40 |
-| 1 | Ring magnet | N52, ~D10/D5 x 2 mm, axial | In the adjuster carrier | $0.50 |
-| 1 | Steel washer | M3, ~0.3 g | Centering armature on stick | $0.05 |
-| 1 | Ball | 4 mm steel or ceramic, grade 25 | Pivot | $0.30 |
-| 1 | PTFE cup | machined from 6 mm PTFE rod, or printed PCTG seat + PTFE tape | Budget path works, measure breakout | $0.50 |
-| 1 | Stick tube | carbon, ~2.5 mm OD | Kite/hobby stock | $0.50 |
-| 1 | Pod PCB | 2-layer, ~20 x 20 mm | | $1.00 |
-| 1 | Carrier + housing | printed, M12 x 0.75 thread | Quarter-turn detents | print |
+| 1 | Sense magnet | N52 disc, D4 x 2 mm, **diametric** | On the flexure's moving platform. Diametric is load-bearing: axial will not work | $0.40 |
+| 1 | Tetra II flexure | printed PLA/PETG, single piece, ~0.7 mm blade walls | The pivot **and** the centering spring; see [`models/tetra2-flexure/`](../models/tetra2-flexure/) (CC-BY) | print |
+| 1 | Stick tube | carbon, ~2.5 mm OD | Kite/hobby stock; mounts to the flexure platform so its natural pivot sits at P | $0.50 |
+| 1 | Pod PCB | 2-layer, ~20 x 20 mm | Flexure base mounts to it | $1.00 |
+| 1 | Flexure mount / pod housing | printed | Locates flexure base over the PCB, sets the 1.5 mm magnet gap | print |
 | 2 | Topper magnets | N52 D3 x 1 mm | One in stick, one per topper | $0.20 |
+
+Dropped from the ball-pivot pod: the 4 mm ball, PTFE cup, ring centering magnet, steel
+armature washer, and the M12 x 0.75 threaded force-adjuster carrier — the flexure replaces all
+of them. They live on in the [alternative mechanism](#alternative-mechanism-ball-in-ptfe-pod).
 
 ### Pod connector (JST-SH 1.0 mm, 6-pin)
 
@@ -95,36 +113,78 @@ the carrier changes the gap, which scales centering force and preload together.
 I2C at 400 kHz minimum, 1 MHz target. Keep the cable under ~30 cm for 1 MHz; chin-boom builds
 with longer runs drop to 400 kHz (still comfortably supports 1 kHz sampling).
 
-### Moving-mass budget (hard limit 2.5 g, see DESIGN_V2 section 3)
+### Moving-mass budget (gravity bias, see DESIGN_V2 section 3)
+
+The ball-pivot pod held the moving stick assembly under 2.5 g so a tilted-mount gravity bias
+stayed below the centering force. The flexure changes the accounting: it has no ball or steel
+washer, but its **moving platform and inner blades** add distributed mass that the old table did
+not, and there is no adjustable centering to fight gravity with — the blades' fixed restoring
+torque does. So re-derive the budget against the *measured* flexure stiffness in Phase 0.
 
 | Part | Mass |
 |------|------|
 | Carbon tube (40 mm) | ~0.4 g |
 | Sense magnet D4x2 | ~0.19 g |
-| Steel washer | ~0.3 g |
-| Ball (4 mm steel) | ~0.26 g |
 | Topper + magnet | <1.0 g |
-| **Total** | **~2.1 g** |
+| Flexure moving platform + inner blades | measure (was 0 in ball-pivot accounting) |
+| **Target** | keep gravity torque well under the flexure's restoring torque |
 
-Weigh every new topper design against this table. Ceramic ball saves ~0.15 g if needed.
+Weigh every new topper against this, and prefer stiffer-blade flexures for chin/vertical mounts
+so the stick still returns to centre against gravity.
 
 ### Assembly targets
 
 - Magnet-to-sensor gap: 1.5 mm nominal (1.0-2.5 mm usable; calibration absorbs the build)
-- Preload at center: ~30 gf (set by carrier position at the "3 gf" detent)
+- Stick's natural pivot aligned with the flexure's remote centre **P** (~50 mm out); the flexure
+  base seated flat and square to the PCB so the moving platform tilts about P, not askew
 - Sensors symmetric about the pivot axis, ~3 mm apart
-- No ferromagnetic fasteners in the pod except the intended washer; brass or nylon M2 hardware
+- No ferromagnetic fasteners in the pod; brass or nylon M2 hardware
+- Inspect blades after printing — a cracked or under-extruded blade changes stiffness and is a
+  single-point failure (a blade break scraps the one-piece joint)
 
-### Force adjuster
+---
 
-Printed M12 x 0.75 external thread on the carrier, internal thread in the pod housing,
-quarter-turn detent spring. Approximate mapping (characterize per build in Phase 0):
+## Alternative mechanism: ball-in-PTFE pod
+
+The original V2 pivot, retained as the fallback if printed-flexure creep/fatigue proves
+unacceptable on the bench, and as the rig that characterises the sensing independent of the
+pivot. The sensing, connector, and main board are identical to the flexure pod above.
+
+```
+            +-----o-----+      pivot: 4 mm ball in PTFE cup
+            |   ball    |      (magnet preload seats it, ~30 gf)
+            +-----+-----+
+                  |
+          [steel washer]       centering armature, rigid with stick
+             [N52 D4x2]        diametric sense magnet, tilts 1:1 with stick
+                  |
+         . . . . gap ~1.5 mm . . . .
+       =============================    pod PCB, dual TMAG5273
+              (ring magnet on            centering force + ball preload,
+               threaded carrier)         turn to set 1-8 gf
+```
+
+A ring magnet in a threaded carrier attracts a steel washer on the stick: on-axis the
+attraction is pure preload seating the ball; tilted, it is a restoring torque. Turning the
+carrier changes the gap, scaling centering force and preload together.
+
+**Extra parts vs the flexure pod:** 4 mm steel/ceramic ball (grade 25, ~$0.30), PTFE cup
+(machined 6 mm rod or printed PCTG seat + PTFE tape, ~$0.50), N52 ~D10/D5 x 2 mm axial ring
+magnet (~$0.50), M3 steel armature washer (~$0.05), printed M12 x 0.75 carrier + housing with
+quarter-turn detents.
+
+**Force adjuster mapping** (characterize per build in Phase 0):
 
 | Carrier position | Full-deflection force at 40 mm |
 |---|---|
 | Backed out (max gap) | ~1 gf, floaty |
 | Nominal | 3 gf |
 | Bottomed (min gap) | ~8 gf, near-isometric feel |
+
+Moving-mass budget for this variant is the original <2.5 g (carbon tube ~0.4 g + sense magnet
+~0.19 g + steel washer ~0.3 g + 4 mm ball ~0.26 g + topper <1.0 g ≈ 2.1 g; ceramic ball saves
+~0.15 g). The build steps live in [ASSEMBLY.md](ASSEMBLY.md) and the printable parts in
+[`models/`](../models/README.md) (Pod v0).
 
 ---
 
@@ -208,13 +268,16 @@ state-of-charge; slide switch between cell and system. USB-only builds omit all 
 |------|------|------|
 | MCU module | ESP32-S3-MINI-1-N8 | $3.50 |
 | Hall sensors | 2x TMAG5273A1 (distinct address variants) | $1.60 |
-| Magnets | sense + ring + topper set | $2.50 |
+| Magnets | sense + topper set (no ring centering magnet) | $2.00 |
 | USB-C + ESD + LDO + passives | | $2.50 |
 | Jacks | 4x PJ-320A | $1.60 |
 | Buttons, LEDs, connectors | | $1.50 |
 | PCBs | main + pod, JLCPCB 2-layer | $4.00 |
-| Pivot hardware | ball, PTFE, brass/nylon M2-M3 | $2.00 |
-| Printed parts | PLA/PETG, ~60 g | $3.00 |
+| Pivot hardware | brass/nylon M2-M3 (flexure is printed) | $0.50 |
+| Printed parts | PLA/PETG incl. Tetra II flexure, ~70 g | $3.50 |
+
+The ball-in-PTFE pod adds ball + PTFE + ring magnet + carrier (~$3.35); see the
+[alternative mechanism](#alternative-mechanism-ball-in-ptfe-pod).
 
 ### Options
 
@@ -284,4 +347,5 @@ drift, cycle life) are in [DESIGN_V2.md](DESIGN_V2.md) section 10.
 2. Pod schematic + layout, panelized
 3. Main board schematic + layout
 4. Order boards + magnets together; calibration sweep on first articles
-5. Iterate the printed carrier thread until detents feel right
+5. Print the Tetra II flexure, measure full-deflection force on the gram gauge, and iterate
+   blade thickness / scale until the nominal feel target is met (bench, not calculated)

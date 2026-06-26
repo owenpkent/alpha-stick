@@ -11,11 +11,13 @@ directly. This is the real geometry, not a rebuild:
 
 ![front](preview-front.png) ![iso](preview-iso.png) ![side](preview-side.png)
 
-It lives in `models/community/` because it is a third-party design (CC-BY), kept
-separate from the core Alpha Stick pod parts. It is here as a candidate
-ultra-low-force gimbal: a compliant joint has no bearings to bind, no friction,
-and no backlash, and the pivot floats out in space where a hand naturally
-rotates.
+This is the **primary pivot mechanism** for Alpha Stick V2: a compliant joint
+has no bearings to bind, no friction, and no backlash, and the pivot floats out
+in space where a hand naturally rotates. It is a third-party design and so
+carries its own **CC-BY** licence (attribution below), separate from the repo's
+MIT / CERN-OHL-P work; that licence travels with the part wherever it lives. The
+ball-in-PTFE-cup pod is kept as the alternative mechanism (see
+[docs/HARDWARE.md](../../docs/HARDWARE.md)).
 
 > An earlier parametric OpenSCAD approximation lived here; it was a single
 > tetrahedron element and did not capture the nested, variable-thickness real

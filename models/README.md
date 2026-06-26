@@ -4,7 +4,41 @@ Printable parts for Alpha Stick V2. Print settings live in
 [docs/PRINTING.md](../docs/PRINTING.md); the design rationale in
 [docs/DESIGN_V2.md](../docs/DESIGN_V2.md).
 
-## Pod v0: the Phase 0 bench rig
+## Tetra II flexure: the primary pivot mechanism
+
+Alpha Stick V2 pivots on the **Tetra II spherical flexure joint** in
+[`tetra2-flexure/`](tetra2-flexure/). It is a bearing-free compliant gimbal:
+nested tetrahedron blade flexures give 3-DOF rotation about a remote centre that
+floats ~50 mm out from the joint, with **no sliding surfaces** — so no friction,
+no backlash, no break-away force, and the blades themselves provide the elastic
+return to centre (no centering magnet, no spring, no threaded force adjuster).
+The diametric sense magnet rides the moving platform and the dual TMAG5273 Hall
+sensors read tilt exactly as before; only the pivot-and-return mechanism changes.
+
+![Tetra II flexure — isometric](tetra2-flexure/preview-iso.png)
+![Tetra II flexure — front](tetra2-flexure/preview-front.png)
+![Tetra II flexure — side](tetra2-flexure/preview-side.png)
+
+| File | What it is |
+|------|------------|
+| [`tetra2-flexure/Tetra2.STEP`](tetra2-flexure/Tetra2.STEP) | source CAD (B-rep); scale, thicken blades, or cut a stick mount in FreeCAD / Fusion / SolidWorks |
+| [`tetra2-flexure/Tetra2.STL`](tetra2-flexure/Tetra2.STL) | ready-to-slice mesh of the same part |
+| [`tetra2-flexure/README.md`](tetra2-flexure/README.md) | paper analysis, printing notes, and CC-BY attribution |
+
+This is Jelle Rommers' design and carries an upstream **CC-BY** licence (credit
+required), separate from the repo's MIT / CERN-OHL-P work — see the folder
+README. Stiffness (= the force you feel) is hard to predict for the real
+tetrahedron element and is set by blade geometry, material, and scale, so it is
+a **Phase 0 bench measurement**, not a hand-calculated figure. A printed PLA
+joint is fine for feel studies but creeps and fatigues under daily use; PETG or
+a printed-then-cast/metal version are the follow-ups.
+
+## Pod v0: the ball-pivot bench rig (alternative mechanism)
+
+The pod parts below build the **alternative** ball-in-PTFE-cup mechanism with
+magnetic centering — the original V2 path, kept as a fallback and as the bench
+rig that characterises the dual-Hall sensing independent of the pivot choice
+(see [docs/HARDWARE.md](../docs/HARDWARE.md#alternative-mechanism-ball-in-ptfe-pod)).
 
 `source/pod-v0.scad` (OpenSCAD, fully parametric) generates the rig that
 validates the V2 mechanism using the parts from
@@ -67,21 +101,16 @@ Edit parameters at the top of `source/pod-v0.scad`, then:
 Part selector values: `hub`, `housing`, `base`, `carrier`, `topper`, `guide`,
 `plate` (all parts in print orientation), `section` (assembly cross-section).
 
-## Community / experimental parts
-
-Derived or third-party designs, kept separate from the core pod so their
-upstream licences stay clear.
-
-| Part | Source | What it is |
-|------|--------|------------|
-| Tetra II spherical flexure joint | [`community/tetra2-flexure/`](community/tetra2-flexure/) | Jelle Rommers' remote-centre spherical flexure, original `STEP` + `STL` (CC-BY). A bearing-free compliant gimbal candidate: nested tetrahedron blade flexures pivot about a point that floats ~50 mm out from the joint. See the folder README for the paper analysis. |
-
 ## Layout
 
 ```
 models/
-+-- source/    pod-v0.scad (parametric source of truth)
-+-- stl/       ready-to-print exports (regenerate after editing source)
-+-- step/      reserved for the production pod (FreeCAD/Fusion era)
-+-- community/ derived / third-party parts (see table above); your toppers and bodies
++-- tetra2-flexure/  primary pivot: Tetra II flexure STEP + STL (third-party, CC-BY)
++-- source/          pod-v0.scad (parametric source of truth for the alternative pod)
++-- stl/             ready-to-print pod exports (regenerate after editing source)
++-- step/            reserved for the production pod (FreeCAD/Fusion era)
++-- community/       community-contributed toppers and bodies (created on first PR)
 ```
+
+Third-party parts (currently the Tetra II flexure) keep their upstream licence
+in their own folder README; everything else is the repo's MIT / CERN-OHL-P work.

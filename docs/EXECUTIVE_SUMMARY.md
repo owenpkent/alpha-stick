@@ -22,13 +22,15 @@ by most of the people who need it.
 Alpha Stick attacks the force problem at the physics level instead of
 softening a conventional joystick:
 
-- **Nothing touches anything.** Position is sensed contactlessly (a magnet
-  read by Hall-effect sensors), and the centering force is magnetic
-  attraction rather than a spring. The only contact is a pivot with under
-  0.2 grams of friction.
-- **The force is a dial.** Turning a threaded magnet carrier sets the
-  full-deflection force anywhere from 1 to 8 grams, with no tools, so the
-  stick can match a user's strength day to day.
+- **Nothing slides.** The stick pivots on a printed *spherical flexure* (the
+  Tetra II joint): a compliant part with no bearings and no sliding surfaces,
+  so there is no friction and no break-away force — the first gram of input
+  already moves it. Position is sensed contactlessly, a magnet read by
+  Hall-effect sensors.
+- **The force is the pivot.** The flexure's blades bend and spring back, so
+  they are the return-to-centre force with no separate spring or magnet. The
+  full-deflection force (target under 5 grams) is set by the printed blade
+  geometry; a stiffer or softer flexure retunes it.
 - **One device, many roles.** The same hardware is a USB/Bluetooth gamepad, a
   precision mouse (including zero-force dwell clicking), a keyboard, and an
   input node for the ATOS open wheelchair platform.
@@ -40,9 +42,10 @@ softening a conventional joystick:
 1. **Direction-based magnetic sensing** makes the measurement immune to
    temperature and mechanical creep, which is what makes a sub-5-gram printed
    device stable enough to trust.
-2. **Adjustable passive magnetic centering**: one magnet provides the pivot
-   preload and the return force simultaneously, with zero springs and zero
-   wearing parts.
+2. **A bearing-free compliant pivot** (the Tetra II spherical flexure): one
+   printed part is the joint *and* the return-to-centre spring, with no
+   bearings, no sliding friction, and no backlash — and the remote pivot even
+   floats out in space where a hand naturally rotates.
 3. **A drive-grade upgrade path**: dual redundant sensors (about $1 of
    silicon) plus a TTL/sequence-numbered protocol let the same stick serve as
    a wheelchair drive input under a safety host's authority.
