@@ -16,9 +16,10 @@ list. Contributions that help most right now:
 1. **First hardware bring-up.** The firmware compiles in CI but has never run
    on a device: flash a bare ESP32-S3 devkit and confirm the simulation-mode
    gamepad demo (`firmware/README.md` checklist), then report what you saw.
-2. **Print and report.** Print the pod v0 parts ([models/](models/)), try the
-   thread fit and pivot feel, and file a Build/Bench Report issue with your
-   printer, settings, and measurements.
+2. **Print and report.** Print the primary **Tetra II flexure**
+   ([models/tetra2-flexure/](models/tetra2-flexure/)) and/or the alternative pod
+   v0 parts ([models/](models/)), try the feel, and file a Build/Bench Report
+   issue with your printer, material, settings, and measured force.
 3. **Verify the TMAG5273 register map** in
    `firmware/components/as_sensing/tmag5273.cpp` against the TI datasheet.
 4. **Design toppers.** Custom toppers in `models/community/` (hollow, under
@@ -140,9 +141,12 @@ int calc(int v, float d) { return abs(v/32767.0)<d?0:v; }
 
 ### 3D Models
 
-- The pod mechanism's source of truth is `models/source/pod-v0.scad`
-  (OpenSCAD, parametric): edit named parameters, never hand-edit STLs, and
-  commit the `.scad` and regenerated STLs together
+- The primary pivot, the **Tetra II flexure**, is a third-party STEP/STL in
+  [`models/tetra2-flexure/`](models/tetra2-flexure/) (CC-BY): edit the STEP and
+  re-export the STL, and keep its upstream attribution intact
+- The alternative pod mechanism's source of truth is
+  `models/source/pod-v0.scad` (OpenSCAD, parametric): edit named parameters,
+  never hand-edit STLs, and commit the `.scad` and regenerated STLs together
 - New standalone parts (toppers, bodies): any CAD is welcome in
   `models/community/`, but include the source file and an STL
 - Toppers must be hollow and under 1 g printed (the moving-mass budget in

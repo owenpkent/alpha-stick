@@ -6,6 +6,14 @@
     Inspired by commercial solutions like QuadStick and Feather — but fully open and hackable.
   </p>
   <p>
+    <a href="https://github.com/owenpkent/alpha-stick/actions/workflows/firmware.yml"><img src="https://github.com/owenpkent/alpha-stick/actions/workflows/firmware.yml/badge.svg" alt="Firmware CI"/></a>
+    <a href="https://github.com/owenpkent/alpha-stick/actions/workflows/models.yml"><img src="https://github.com/owenpkent/alpha-stick/actions/workflows/models.yml/badge.svg" alt="Models CI"/></a>
+    <img src="https://img.shields.io/badge/license-MIT%20%2F%20CERN--OHL--P-blue" alt="License: MIT (firmware) / CERN-OHL-P (hardware)"/>
+    <img src="https://img.shields.io/badge/status-Phase%200%3A%20bench%20validation-orange" alt="Status: Phase 0 bench validation"/>
+    <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen" alt="PRs welcome"/></a>
+    <a href="https://github.com/owenpkent/alpha-stick/discussions"><img src="https://img.shields.io/badge/discussions-join-8A2BE2" alt="Join the discussions"/></a>
+  </p>
+  <p>
     <img src="models/tetra2-flexure/preview-iso.png" alt="Tetra II spherical flexure joint — the primary pivot mechanism" width="440"/>
   </p>
   <p><em>The pivot is a <strong>Tetra II spherical flexure</strong>: bearing-free, frictionless, and self-centering — the first gram of input already moves it.</em></p>
