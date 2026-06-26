@@ -222,9 +222,16 @@ in all project spaces.
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under:
-- **MIT License** — For code and firmware
-- **CERN-OHL-P v2** — For hardware designs
+By contributing your **original** work, you agree it will be licensed under:
+- **MIT License** — code and firmware
+- **CERN-OHL-P v2** — hardware designs
+
+**Third-party parts are different.** The Tetra II flexure is bundled under
+Creative Commons Attribution (CC BY) — see [NOTICE.md](NOTICE.md). If your
+contribution modifies it (scaling, a different stick mount, a re-export), that
+derivative stays under CC BY: keep the attribution to Jelle Rommers and **state
+what you changed**. Don't relicense a CC-BY derivative as MIT/CERN-OHL-P. Adding
+a new third-party part? List it in NOTICE.md with its source and licence.
 
 ---
 

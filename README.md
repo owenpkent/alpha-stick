@@ -312,9 +312,11 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 ## License
 
-This project is licensed under the **MIT License** — see [LICENSE](LICENSE) for details.
+- **Code & firmware** — [MIT License](LICENSE).
+- **Original hardware designs** (the pod, bench rig, bodies, toppers) — **CERN-OHL-P v2** (permissive).
+- **Tetra II spherical flexure** (the primary pivot) — third-party design by Jelle Rommers under **Creative Commons Attribution (CC BY)**, used unmodified; credit is required if you share or build on it.
 
-Hardware designs are released under **CERN-OHL-P v2** (permissive).
+Bundled third-party components and their attribution are listed in [NOTICE.md](NOTICE.md).
 
 ---
 

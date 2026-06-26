@@ -87,6 +87,9 @@ then re-export an STL for slicing. There is no parametric feature tree in a STEP
 export, so large changes are easier by re-deriving from the paper's parameters
 than by editing the mesh.
 
+Because this part is **CC BY**, any edited version you share must keep the
+attribution below **and** state that you changed it (and what you changed).
+
 ## Printing notes (from the original author)
 
 - Regular PLA is fine for a demonstrator; no flexible filament needed.
@@ -108,4 +111,10 @@ credit Jelle Rommers and link the original and the paper:
 - Video: https://www.youtube.com/watch?v=DAngcygU7tc
 
 This part carries an upstream CC-BY licence, separate from the repo's MIT /
-CERN-OHL-P licensing for original work.
+CERN-OHL-P licensing for original work. It is also recorded repo-wide in
+[NOTICE.md](../../NOTICE.md).
+
+- **Modifications in this repo:** none — the files here are the author's original
+  publication, used unmodified.
+- **Licence version:** the Thingiverse listing shows Creative Commons Attribution;
+  confirm the exact generation (e.g. CC BY 4.0) at the source before pinning it.
