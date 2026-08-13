@@ -154,7 +154,13 @@ with input speed, so it smooths rest tremor without adding lag to deliberate mot
 | CDC | n/a | Config channel (JSON lines), WebSerial-compatible |
 
 Mode switching changes *which reports stream*; descriptors are constant. The OS sees one stable
-device, which keeps Windows happy and keeps XAC enumeration deterministic (verify in Phase 0).
+device, which keeps Windows happy.
+
+**This composite will probably not enumerate on an Xbox Adaptive Controller.** The XAC's USB
+host ports appear to accept only a single-function HID joystick: no keyboard, mouse, or CDC
+interfaces, 8 buttons, unsigned 0-255 axes. Reaching an XAC therefore needs a separate
+boot-selected USB personality, specified in [TOPOLOGY.md](TOPOLOGY.md) section 2.2. Verify
+against a real XAC in Phase 0.
 
 **BLE (NimBLE):** one HID service exposing the same three report IDs; bonding list of 3 with a
 button-combo quick switch; connection interval 7.5 ms; appearance set per active mode
@@ -167,6 +173,9 @@ node. ~2-4 ms link latency.
 ---
 
 ## Modes
+
+Modes are HID personalities. What deflection *means* inside a mode is set by the layer system,
+specified separately in [MODES.md](MODES.md) (not yet implemented).
 
 - **Gamepad:** stick -> left stick; mappings (Z-click, jacks, sip/puff thresholds -> buttons,
   second-stick or trigger emulation) per profile.
@@ -183,6 +192,9 @@ node. ~2-4 ms link latency.
 ---
 
 ## AS-Link (ATOS integration)
+
+AS-Link also carries stick-to-stick traffic in a multi-input build. See [TOPOLOGY.md](TOPOLOGY.md)
+for the hub/satellite roles and the `src_id` field the wire format still needs.
 
 Wire format mirrors ATOS `atos_drive_proposal_t` semantics (normalized axes, TTL, monotonic
 seq) so the ATOS-side gateway is a thin map. Full contract in DESIGN_V2 section 9.

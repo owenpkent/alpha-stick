@@ -101,11 +101,17 @@ Alpha Stick draws from the best features of existing adaptive controllers:
 
 ## Target Platforms
 
-- **PC** — Windows (USB/Bluetooth), Linux, macOS
-- **Xbox** — Via Xbox Adaptive Controller (3.5mm jack or USB)
-- **PlayStation** — Via PS Access Controller or adapter
+Nothing below is bench-verified yet. Treat it as the design target, not a promise.
+
+- **PC** — Windows (USB/Bluetooth), Linux, macOS. Direct, no adapter
+- **Mobile** — Android/iOS via Bluetooth. Direct, no adapter
 - **Nintendo Switch** — Via USB or Bluetooth (with appropriate mode)
-- **Mobile** — Android/iOS via Bluetooth
+- **Xbox** — Via Xbox Adaptive Controller, which requires a restricted USB build (single HID joystick, 8 buttons) and caps what we can send. See [docs/TOPOLOGY.md](docs/TOPOLOGY.md) section 2.1
+- **PlayStation** — Via PS Access Controller (switch signals only), or an AS-Bridge with a controller you own
+
+Consoles enforce authentication we do not and will not implement. The planned route is an
+**AS-Bridge**: a ~$5 RP2040 board running [GP2040-CE](https://gp2040-ce.info/) with an Alpha
+Stick input add-on, relaying auth from a licensed device. See [docs/BRIDGE.md](docs/BRIDGE.md).
 
 ---
 
@@ -119,12 +125,17 @@ alpha-stick/
 ├── LLM_ONBOARDING.md         # AI assistant reference
 ├── docs/
 │   ├── EXECUTIVE_SUMMARY.md  # One page: what and why
+│   ├── PRD.md                # Requirements, risks, milestones
 │   ├── WHITEPAPER.md         # The full technical narrative
 │   ├── DESIGN_V2.md          # V2 design baseline (working doc)
 │   ├── WORKFLOW.md           # Development loops & conventions
 │   ├── HARDWARE.md           # Build reference & BOM
 │   ├── FIRMWARE.md           # Firmware architecture (ESP-IDF)
+│   ├── MODES.md              # Layer system: one stick, every control
+│   ├── TOPOLOGY.md           # Hub & satellites: many inputs, one device
+│   ├── BRIDGE.md             # AS-Bridge: console reach via GP2040-CE
 │   ├── PHASE0_PARTS.md       # Bench parts list
+│   ├── ISOMETRIC_PARTS.md    # Isometric build parts
 │   ├── BENCH_LOG.md          # Measured results
 │   ├── PRINTING.md           # 3D printing guide
 │   ├── ASSEMBLY.md           # Assembly instructions

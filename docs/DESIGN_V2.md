@@ -365,7 +365,7 @@ BLE exposes the same report IDs in one HID service.
 | Platform | Path | Confidence |
 |---|---|---|
 | PC (Win/Linux/macOS) | USB composite HID / BLE HID | High |
-| Xbox | **Via XAC USB port** as generic HID stick (X1/X2) | Medium-high; verify against XAC's supported-device behavior in Phase 0 |
+| Xbox | **Via XAC USB port**, but only with the restricted XAC build (single-function HID joystick, 8 buttons, 0-255 axes, no CDC). The default composite is expected to fail enumeration | **Medium-low.** Constraints are from teardowns, not our bench. See [TOPOLOGY.md](TOPOLOGY.md) 2.1-2.2 |
 | PlayStation | Via PS Access **3.5 mm AUX ports** for switch-type signals; analog passthrough not assumed | Medium |
 | Switch | BLE Pro-Controller emulation (community-proven approach) | Medium |
 | Android/iOS | BLE HID gamepad/mouse | High |
